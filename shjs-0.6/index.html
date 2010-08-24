@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<title>SHJS - Syntax Highlighting in JavaScript</title>
+<!-- used by JS -->
+<style type="text/css"></style>
+
+<link rel="stylesheet" type="text/css" href="doc/style.css">
+
+<script type="text/javascript" src="doc/style.js"></script>
+<script type="text/javascript" src="sh_main.min.js"></script>
+<script type="text/javascript" src="lang/sh_cpp.min.js"></script>
+</head>
+<body onload="body_load();">
+
+<div id="heading"><h1>SHJS - Syntax Highlighting in JavaScript</h1></div>
+
+<div id="main">
+
+<table><tr><td>
+
+<p class="first">
+
+SHJS is a JavaScript program which highlights source code passages in HTML
+documents. Documents using SHJS are highlighted on the client side by the web
+browser.
+
+</p>
+
+<p>
+
+SHJS uses language definitions from <a
+href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a>. This
+gives SHJS the ability to highlight source code written in many different
+languages:
+
+</p>
+
+<table id="threecol">
+<tr>
+<td>
+Bison<br>
+C<br>
+C++<br>
+C#<br>
+ChangeLog<br>
+CSS<br>
+Desktop files<br>
+Diff<br>
+Flex<br>
+GLSL<br>
+Haxe<br>
+HTML<br>
+Java<br>
+</td>
+<td>
+Java properties files<br>
+JavaScript<br>
+JavaScript with DOM<br>
+LaTeX<br>
+LDAP files<br>
+Log files<br>
+LSM (Linux Software Map) files<br>
+M4<br>
+Makefile<br>
+Objective Caml<br>
+Oracle SQL<br>
+Pascal<br>
+Perl<br>
+</td>
+<td>
+PHP<br>
+Prolog<br>
+Python<br>
+RPM spec files<br>
+Ruby<br>
+S-Lang<br>
+Scala<br>
+Shell<br>
+SQL<br>
+Standard ML<br>
+Tcl<br>
+XML<br>
+Xorg configuration files<br>
+</td>
+</tr>
+</table>
+
+<p>
+
+SHJS comes with themes taken from the 
+<a href="http://andre-simon.de/">Highlight</a> program.
+
+</p>
+
+<p>
+
+SHJS is distributed under the <a href="doc/gplv3.html">GNU General Public License version 3</a>.
+
+</p>
+
+</td><td>
+
+<div id="exampleDiv">
+<a id="previous" href="#" onclick="previous(); return false;" title="previous style">&larr;</a>
+<a id="next" href="#" onclick="next(); return false;" title="next style">&rarr;</a>
+<select id="themeSelect" onchange="return loadStyle();" disabled>
+<option>acid</option>
+<option>berries-dark</option>
+<option>berries-light</option>
+<option>bipolar</option>
+<option>blacknblue</option>
+<option>bright</option>
+<option>contrast</option>
+<option>darkblue</option>
+<option>darkness</option>
+<option>desert</option>
+<option>dull</option>
+<option>easter</option>
+<option>emacs</option>
+<option>golden</option>
+<option>greenlcd</option>
+<option>ide-anjuta</option>
+<option>ide-codewarrior</option>
+<option>ide-devcpp</option>
+<option>ide-eclipse</option>
+<option>ide-kdev</option>
+<option>ide-msvcpp</option>
+<option>kwrite</option>
+<option>matlab</option>
+<option>navy</option>
+<option selected>nedit</option>
+<option>neon</option>
+<option>night</option>
+<option>pablo</option>
+<option>peachpuff</option>
+<option>print</option>
+<option>rand01</option>
+<option>the</option>
+<option>typical</option>
+<option>vampire</option>
+<option>vim</option>
+<option>vim-dark</option>
+<option>whatis</option>
+<option>whitengrey</option>
+<option>zellner</option>
+</select>
+<pre id="codePre" class="sh_cpp">
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int main(int argc, char ** argv) {
+  cout &lt;&lt; "Hello world" &lt;&lt; endl;
+  return 0;
+}
+</pre>
+<img id="throbberImg" src="doc/ajax-loader.gif" alt="Loading...">
+<div id="caption">C++ code highlighted using the <code id="themeCode">nedit</code> theme</div>
+</div>
+
+</td></tr><tr><td colspan="2">
+
+<address>
+Copyright &copy; 2007, 2008 <a href="mailto:gnombat@users.sourceforge.net">gnombat@users.sourceforge.net</a>
+<a href="http://www.gnu.org/licenses/gpl.html"><img src="doc/gplv3-88x31.png" width="88" height="31" alt="GPL Logo"></a>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=186094&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" /></a>
+</address>
+
+</td></tr></table>
+
+</div>
+
+<div id="navigation">
+Home |
+<a href="doc/news.html">News</a> |
+<a href="doc/documentation.html">Documentation</a> |
+<a href="doc/browsers.html">Browsers</a> |
+<a href="doc/download.html">Download</a> |
+<a href="http://sourceforge.net/tracker/?group_id=186094">Bugs</a> |
+<a href="doc/gplv3.html">License</a> |
+<a href="doc/links.html">Links</a>
+</div>
+
+</body>
+</html>

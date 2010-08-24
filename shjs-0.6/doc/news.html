@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<title>SHJS - What's new</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div id="heading"><h1>SHJS - What's new</h1></div>
+
+<div id="main">
+
+<h2 class="first">December 15, 2008 - SHJS 0.6</h2>
+
+<p>
+SHJS 0.6 is available for <a href="download.html">download</a>.
+</p>
+
+<p>
+SHJS 0.6 includes several new features, improvements and bug fixes:
+</p>
+
+<ul>
+<li>SHJS is now distributed under version 3 of the GNU General Public License.
+(Older releases of SHJS were distributed under version 2 of the GNU GPL.)
+<li>Markup inside <code>pre</code> elements is now preserved.
+<li>Several new languages (from the latest release of
+<a href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a>)
+are included:
+S-Lang, Scala, Java properties files, Desktop files, LSM (Linux Software Map) files,
+Xorg configuration files, RPM spec files, Haxe, LDAP files, GLSL, Objective Caml,
+Standard ML, JavaScript with DOM, and C (separate from the C++ language file).
+<li>Many other languages have minor improvements.
+<li>Compressed <code>.min.css</code> stylesheets are now included in the
+distribution.
+</ul>
+
+<p>
+Please note that the format of language-specific JavaScript files has changed in
+SHJS 0.6.  JavaScript language files from version 0.6 will not work with
+<code>sh_main.js</code> from previous releases, and <i>vice versa</i>.  Make
+sure you upgrade both the <code>sh_main.js</code> file and language-specific
+files.
+</p>
+
+<h2>August 17, 2008 - SHJS 0.5</h2>
+
+<p>
+SHJS 0.5 is available for <a href="download.html">download</a>.
+</p>
+
+<p>
+SHJS 0.5 includes several new features, improvements and bug fixes:
+</p>
+
+<ul>
+<li>SHJS can now automatically load language script files (<a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=2007022&amp;group_id=186094&amp;atid=915903">feature request #2007022</a> - thanks to Michal Nazarewicz and Eugene Marcotte).
+<li>Highlighting of C/C++ and JavaScript has been improved.
+<li>A new language file for Oracle SQL has been added (thanks to Mike Breeze).
+<li>Case-insensitive regular expressions are now handled more efficiently.
+<li>SHJS now treats <code>&lt;br&gt;</code> tags as line terminators in input (<a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=2054144&amp;group_id=186094&amp;atid=915900">bug #2054144</a> - thanks to Altforweilerer).
+<li>Compressed <code>.min.js</code> files are now generated with YUI Compressor.
+</ul>
+
+<h2>August 4, 2007 - SHJS 0.4.2</h2>
+
+<p>
+SHJS 0.4.2 is available for <a href="download.html">download</a>.
+</p>
+
+<p>
+SHJS 0.4.2 includes a number of improvements and bug fixes:
+</p>
+
+<ul>
+<li>Fixed problem with strings terminated by an escape character in some languages.
+<li>Fixed highlighting of variables in PHP and Python.
+<li>Made URLs into actual hyperlinks.
+<li>Fixed xpcshell tests on Windows.
+<li>Reduced size of source distribution by removing unused code.
+<li>Improved styles for CSS, diff, ChangeLog and log files.
+<li>Improved documentation.
+</ul>
+
+<h2>August 3, 2007 - bug tracker on SourceForge</h2>
+
+<p>
+The <a href="http://sourceforge.net/tracker/?group_id=186094">SourceForge bug tracker</a> is now operational.
+</p>
+
+<h2>August 1, 2007 - SHJS Filter for Drupal</h2>
+
+<p>
+The <a href="http://kaioa.com/node/4">SHJS Filter</a> 
+incorporates SHJS into the <a href="http://drupal.org/">Drupal</a> content management system.
+</p>
+
+<h2>July 1, 2007 - SHJS 0.4.1</h2>
+
+<p>
+SHJS 0.4.1 is available for <a href="download.html">download</a>.
+</p>
+
+<p>
+SHJS 0.4.1 fixes a bug that can cause very large code segments to be truncated when
+viewed with Opera.
+</p>
+
+<h2>June 11, 2007 - SHJS 0.4</h2>
+
+<p>
+
+SHJS 0.4 is available for <a href="download.html">download</a>.
+
+</p>
+
+<p>
+SHJS 0.4 has new regular expression matching features from the latest release of
+<a href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a>.
+SHJS now supports backreferences and highlighting of parenthesized
+subexpressions.  This release includes improved highlighting patterns for
+ChangeLog files, C/C++, Flex, HTML, Java, log files, Perl, and Ruby.
+</p>
+
+<p>
+See the 
+<a href="http://www.gnu.org/software/src-highlite/source-highlight.html">Source-highlight manual</a>
+for the syntax of these new features.
+</p>
+
+<h2>March 25, 2007 - SHJS 0.3</h2>
+
+<p>
+
+SHJS 0.3 is available for <a href="download.html">download</a>.
+
+</p>
+
+<p>
+SHJS 0.3 includes support for 3 new languages: CSS, M4, and Makefiles
+(from the latest release of
+<a href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a>).
+</p>
+
+<h2>January 27, 2007 - SHJS 0.2</h2>
+
+<p>
+
+SHJS 0.2 is available for <a href="download.html">download</a>.
+
+</p>
+
+<p>
+
+SHJS 0.2 includes a few bug fixes and several performance improvements: in Firefox, for example, it runs
+more than twice as fast as SHJS 0.1.
+
+</p>
+
+<address>
+Copyright &copy; 2007, 2008 <a href="mailto:gnombat@users.sourceforge.net">gnombat@users.sourceforge.net</a>
+<a href="http://www.gnu.org/licenses/gpl.html"><img src="gplv3-88x31.png" width="88" height="31" alt="GPL Logo"></a>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=186094&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" /></a>
+</address>
+
+</div>
+
+<div id="navigation">
+<a href="../">Home</a> |
+News |
+<a href="documentation.html">Documentation</a> |
+<a href="browsers.html">Browsers</a> |
+<a href="download.html">Download</a> |
+<a href="http://sourceforge.net/tracker/?group_id=186094">Bugs</a> |
+<a href="gplv3.html">License</a> |
+<a href="links.html">Links</a>
+</div>
+
+</body>
+</html>

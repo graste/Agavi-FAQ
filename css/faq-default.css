@@ -1,0 +1,178 @@
+
+a img {
+  border: none;
+}
+
+a, a:link, a:visited, a:focus, a:hover, a:active {
+	text-decoration: none;
+	color: #006699;
+}
+
+a:visited {
+    color: #009966;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+ul,ol {
+  margin-top: 1.5em;
+  line-height: 1.8em;
+  font-size: 1.1em;
+  margin-left: 3em;
+}
+
+
+#faq dt {
+  font-weight: bold;
+  /*margin: 15px 50px 5px;*/
+  margin: 0;
+  margin-left: 50px;
+  margin-top: 15px;
+  /*  padding: 0;*/
+  float: none;
+  width: auto;
+}
+
+#faq dt:before {
+  content: "Q";
+  font-size: 1.5em;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  margin-right: 0.5em;
+  padding: 0 8px 5px 8px;
+  color: #000;
+  background-color: #C20700; /*#FC8E00;*/
+  font-weight: normal;
+  margin-left: -47px;
+  position: relative;
+}
+
+#faq dd {
+  margin: 0;
+  margin-left: 50px;
+  margin-top: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+  padding-left: 0;
+  display: block;
+}
+
+#faq dd:before {
+  content: "A";
+  font-size: 1.5em;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  margin-right: 0.5em;
+  padding: 3px 9px;
+  color: #FFF;
+  background-color: #006699; /*#B8D03B;*/
+  margin-left: -47px;
+  position: relative;
+}
+
+
+/* sub DLs */
+#faq dd dt:before {
+    content: "value:";
+    font-size: 0.9em;
+    background-color: #FC8E00;
+}
+
+#faq dd dd:before {
+    content: "descr:";
+    font-size: 0.9em;
+    background-color: #B8D03B;
+}
+
+#faq dd dd {
+    border: none;
+}
+
+/* ULs in DLs */
+#faq dd ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 1.5em;
+  margin-right: 0;
+  font-size: 95%;
+}
+
+
+#faq hr {
+  color: #666;
+  background-color: #666;
+  height: 1px;
+  border: 0;
+  width: 90%;
+  margin: 35px auto 25px auto;
+}
+
+.totop {
+  text-align: right;
+  margin: 25px 0px;
+  font-size: 90%;
+}
+
+
+
+
+
+
+blockquote {
+  margin: 0 3em;
+}
+blockquote {
+  background: transparent url(../img/quoright.png) bottom right no-repeat;
+}
+blockquote > *:first-child {
+  padding: 10px 48px;
+  background: transparent url(../img/quoleft.png) left top no-repeat;
+}
+blockquote p {
+  padding: 10px 48px;
+  background: transparent url(../img/quoleft.png) top left no-repeat;
+}
+blockquote p+p {
+  background: transparent;
+}
+
+
+.introduction {
+  background: #dfd;
+  padding: 1em;
+  border: 2px solid #dbb;
+}
+
+.warning {
+  background: #fdd;
+  padding: 1em;
+  border: 2px solid #dbb;
+}
+
+.hint {
+  background: #feffbf;
+  padding: 1em;
+  border: 2px solid #dbb;
+}
+
+
+
+:target/*, :target+dd, :target+dd pre */{
+  background: url(../img/yellow-fade.gif);
+}
+
+#faq:target {
+  background: white;
+}
+
+
+
+dt[id]:hover:after, dt[id]:focus:after,
+h2[id]:hover:after, h2[id]:focus:after {
+  color: #999;
+  content: " #"attr(id)" ";
+}
+
+.legacy {
+    text-decoration: line-through;
+}
