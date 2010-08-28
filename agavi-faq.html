@@ -1075,15 +1075,17 @@ $ro-&gt;gen('music.genre', ...);     // link to HTML listing of genres
     &lt;/parameters&gt;
 &lt;/output_type&gt;
 </pre>
-    You then define the routes you need to use and generate feeds in <code>routing.xml</code>:  
+    You then define the routes you need to use and generate feeds in <code>routing.xml</code>:
 <pre class="sh_xml">
-&lt;route name="rss" pattern=".rss$" stop="false" output_type="rss" /&gt;
+&lt;route name="rss" pattern=".rss$" stop="false" cut="true" output_type="rss" /&gt;
 ...
 &lt;route name="music" pattern="^/music"&gt;
   &lt;route name=".genre" pattern="^/genre/(name:[\S\s]+)$"&gt;
   &lt;/route&gt;
 &lt;/route&gt;
 </pre>
+    The <code>cut="true"</code> attribute tells Agavi to cut ".rss" from the route and continue
+    with matching the routes as <code>stop="false"</code>.<br />
     Then in your views you have the different <code>execute*()</code> methods for each
     output type to generate your music genre listing (in this example):
 <pre class="sh_php">
