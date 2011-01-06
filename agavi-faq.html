@@ -302,7 +302,7 @@ AgaviConfig::set('some.setting', 'some_value');
     in the example above. 
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
-  <dt id="general_10">How to set custom database connection settings?</dt>
+  <dt id="general_10">How to set custom database connection properties?</dt>
   <dd>You can set additional options to your database connections in your <code>app/config/database.xml</code>
     file (see that <code>settings</code> parameter):
 <pre class="sh_xml">
@@ -785,6 +785,13 @@ in the correct order. Together with other subclasses of ext/dom classes, it prov
 to ease the processing of configuration files, but of course, all capabilities of DOM, including XPath,
 are usable inside configuration handlers.</p>
     </blockquote>
+    <div class="hint">A more in-depth article making extensive use of the Agavi custom configuration handlers was written
+        by Luis Merino. See <a href="http://www.luismerino.name/delivering-static-files-helping-your-app-scal"
+        title="See blog article about custom configuration files in Agavi...">Delivering static files:
+        Helping your app scale using custom configs in Agavi Framework</a> for an introduction about his concept of
+        declaratively specifying which static files (e.g. javascript files or stylesheets) to include for matched routes
+        via a <code>StaticFilesConfigHandler</code>.
+    </div>
 
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
@@ -1969,7 +1976,7 @@ class SampleCustomValidator extends AgaviValidator
                     &lt;group source="user_attribute" namespace="tld.example.sub"&gt;userId&lt;/group&gt;
                     &lt;group source="request_data"&gt;item[id]&lt;/group&gt;
                     &lt;group source="global_request_data"&gt;article_id&lt;/group&gt;
-                    &lt;group source="global_request_data" source="cookies"&gt;someLocaleCookie&lt;/group&gt;
+                    &lt;group source="global_request_data" namespace="cookies"&gt;someLocaleCookie&lt;/group&gt;
                     &lt;group source="callback"&gt;getCustomCachingKeyFromActionMethod&lt;/group&gt;
                     &lt;group source="locale" /&gt;
                 &lt;/groups&gt;
