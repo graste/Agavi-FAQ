@@ -702,7 +702,7 @@ if (AgaviConfig::get('core.use_logging', false))
 
 
   <dt id="general_21">What do I need to know about Agavi models and how to use them?</dt>
-  <dd>In patterns such as MVC, <em>models</em> are widely used to deal with the "business logic" of an application. The way you do this, or even, what patterns to integrate is completely <b>up to you</b>. Nonetheless, Agavi <em>models</em> are extremely useful for a good number of reasons, so you'll probably want to use/extend them with your classes. The AgaviModel class creates a <em>bridge</em> between the business logic, and the rest of the application logic, by simply using Agavi </em>$context</em> internally.
+  <dd>In patterns such as MVC, <em>data models</em> are widely used to deal with the "business logic" of an application. The way you do this, or even, what patterns to integrate is completely <b>up to you</b>. Nonetheless, Agavi <em>models</em> are extremely useful for a good number of reasons, so you'll probably want to use/extend them with your classes. The AgaviModel class creates a <em>bridge</em> between the business logic, and the rest of the application logic, by simply using Agavi </em>$context</em> internally.
 <pre class="sh_php">
 public function initialize(AgaviContext $context, array $parameters = array())
 {
