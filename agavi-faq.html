@@ -702,9 +702,25 @@ if (AgaviConfig::get('core.use_logging', false))
 
 
   <dt id="general_21">What do I need to know about Agavi models and how to use them?</dt>
-  <dd> tbd
+  <dd>In patterns such as MVC, <em>models</em> are widely used to deal with the "business logic" of an application. The way you do this, or even, what patterns to integrate is completely <b>up to you</b>. Nonetheless, Agavi <em>models</em> are extremely useful for a good number of reasons, so you'll probably want to use/extend them with your classes. The AgaviModel class creates a <em>bridge</em> between the business logic, and the rest of the application logic, by simply using Agavi </em>$context</em> internally.
 <pre class="sh_php">
+public function initialize(AgaviContext $context, array $parameters = array())
+{
+	$this->context = $context;
+}
 </pre>
+<p>Every time you initialize a model a $context parameter is passed, along with an array of custom params. This is the way to do it:</p>
+<pre class="sh_php">
+$this->getContext()->getModel('Model_Name', 'Module_Name', array('foo','bar'));
+</pre>
+<p>Models are loaded in the way shown above, and additionally, you can skip the second parameter ONLY if the model is not inside any module, but located at the main application's models/ folder (at the lowest level). Bare in mind not to use the word 'Model' when passing the first parameter. It's '<strong>FooBar</strong>', not '<strong>FooBarModel</strong>'.</p>
+<p>Here's a few extra things you need to know about Agavi models:</p>
+	<ul>
+		<li>Models are only loaded once.</li>
+		<li>Models do not need to be included in autoload.xml, as long as they are under the models folder ( app/models/ ).</li>
+		<li>Models implement __sleep and __wakeup methods, therefore they are easily transform into serialized objects for caching and other common uses.</li>
+	</ul>
+</dd>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
 
