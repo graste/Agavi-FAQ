@@ -719,6 +719,7 @@ $this->getContext()->getModel('Model_Name', 'Module_Name', array('foo','bar'));
 		<li>Models are only loaded once.</li>
 		<li>Models do not need to be included in autoload.xml, as long as they are under the models folder ( app/models/ ).</li>
 		<li>Models implement __sleep and __wakeup methods, therefore they are easily transform into serialized objects for caching and other common uses.</li>
+		<li>When using getModel(), a model's constructor is called as well (if the model has one) which might lead into some confusion. So, if needed you may write both, a constructor and a initialize method. Only the later will have access to the context though.</li>
 	</ul>
 </dd>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
