@@ -1066,7 +1066,19 @@ $action = $route['opt']['action'];
 
 
   <dt id="routing_6">What are routing callbacks and how can I use them?</dt>
-  <dd>
+  <dd>Routing callbacks are something really useful. They are defined inside routes themselves, and by applying them you can perform things like extract, modify or write new parameters for the routes, redirections, and host of other things on execution time, all by just making use of its runtime events.
+<pre class="sh_xml">
+&lt;route pattern=&quot;^/({locale:[a-z]{2}})&quot; stop=&quot;false&quot; imply=&quot;true&quot; cut=&quot;true&quot;&gt;
+	&lt;callbacks&gt;
+		&lt;callback class=&quot;LanguageRoutingCallback&quot; /&gt;
+	&lt;/callbacks&gt;
+	&lt;ignores&gt;
+		&lt;ignore&gt;locale&lt;/ignore&gt;
+	&lt;/ignores&gt;
+&lt;/route&gt;
+</pre>
+<p>There are three events you could use for all purposes: onMatched, onNotMatched, onGenerate. To create a new routing callback extend the class <a href="http://www.agavi.org/apidocs/agavi/routing/AgaviRoutingCallback.html" rel="external">AgaviRoutingCallback</a> and make use of those. The most exceptional thing to realize about them is that parameters, options, and user parameters are passed by reference, so any update in them will affect the route execution or generation. This is perfect since you could use it to your advantage.</p>
+	</dd>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
 
