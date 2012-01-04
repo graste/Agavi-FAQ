@@ -435,7 +435,7 @@ public function executeHtml(AgaviRequestDataHolder $rd)
         $this-&gt;getContainer()-&gt;getResponse()-&gt;setRedirect($absolute_target_url);
     
         // or redirect like this ('relative'=&gt;false may be omitted as Agavi sets it automatically for you)
-        $this-&gt;getResponse()-&gt;setRedirect($this-&gt;getContext()-&gt;getRouting()-&gt;gen('route.to.somewhere', $params_array, array('relative' =&gt; false))));
+        $this-&gt;getResponse()-&gt;setRedirect($this-&gt;getContext()-&gt;getRouting()-&gt;gen('route.to.somewhere', $params_array, array('relative' =&gt; false)));
         return; // no false or AgaviView::NONE here
     }
     
@@ -2798,3 +2798,5 @@ $this-&gt;getResponse()-&gt;setExitCode(1);
 </body>
 </html>
 
+gt;
+                            
