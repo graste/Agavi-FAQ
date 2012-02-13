@@ -87,6 +87,7 @@ configuration sections).
     <li><a href="#general_20">What is the Agavi startup sequence?</a></li>
     <li><a href="#general_21">What do I need to know about Agavi models and how to use them?</a></li>
     <li><a href="#general_22">How to use custom configuration files?</a></li>
+    <li><a href="#general_23">How to use Propel ORM models with Agavi?</a></li>
     <li><a href="#general_99">Is it possible to change the directory structure of a module?</a></li>
 </ol>
 
@@ -813,6 +814,48 @@ are usable inside configuration handlers.</p>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
 
+  <dt id="general_23">How to use Propel models with Agavi?</dt>
+  <dd>For a simple explanation on how to include <a href="http://www.propelorm.org/"
+  title="Homepage of PHP5 Propel Object-Relational Mapping (ORM) project">Propel</a> in your own projects see
+  <a href="http://blog.veikko.fi/post/82466126/installing-a-project-local-propel"
+  title="Veikko explains how to include Propel in an Agavi project by getting it via SVN...">this Blogpost</a>.
+  All you need is <a href="http://www.phing.info/trac/" title="Homepage of The Phing Project">Phing</a> which you
+  probably already have thanks to Agavi.<br />
+  In short: Just get Propel from GitHub as Tarball or via <code title="e.g. via: git clone https://github.com/propelorm/Propel.git propel">clone</code>
+  and put the <code title="Contains the classes required to run Propel in the command line">generator</code> files
+  into your <code>dev/libs/propel</code> folder while the <code title="Contains the classes required to access Propel models and the database.">runtime</code>
+  files may be put into your project's <code>app/lib/vendor/propel</code> directory. Use this distinction when you
+  don't need the generator files in production environments.<br />
+  After getting Propel run it in your project's directory via <code>dev/libs/propel/bin/propel-gen dev/db</code>. Generate
+  your runtime config files into the <code>dev/db</code> directory via <code title="dev/libs/propel/bin/propel-gen convert-conf">convert-conf</code>
+  command. Your classes will probably be in your <code>dev/db/build</code> directory. The important files in your <code>dev/db</code> folder
+  are <code>schema.xml</code>, <code>runtime-conf.xml</code> and <code>build.properties</code>. Configure your directories similar to this:
+<pre class="sh_ini">
+#relative to propel-gen script
+propel.output.dir = ../../..
+propel.php.dir = ${propel.output.dir}/app/lib/vendor/propel
+propel.phpconf.dir = ${propel.output.dir}/dev/db/config
+propel.sql.dir = ${propel.output.dir}/dev/db/sql
+</pre>
+  Configure your include path to include the Propel runtime and OM classes.
+<pre class="sh_php">
+  $path = '/your/project/libs' . PATH_SEPARATOR . '/your/project/app/lib/vendor/propel';
+  set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+</pre>
+  You may setup your Propel connection in your <code>app/lib/config/database.xml</code> file similar to this:
+<pre class="sh_xml">
+&lt;database name="propelom" class="AgaviPropelDatabase"&gt;
+    &lt;ae:parameter name="config"&gt;%core.app_dir%/config/your-project-conf.php&lt;/ae:parameter&gt;
+&lt;/database&gt;
+</pre>
+  You may generate the classmap and conf files to the wanted directory or just copy <code>classmap-your-project-conf.php</code> and
+  <code>your-project-conf.php</code> (from Propel's <code>dev/db/build/conf</code>) to Agavi's <code>app/config</code> directory. You
+  can of course <a href="#general_10" title="FAQ entry about defining custom database connection settings">define custom database connection overrides</a> when needed. 
+  <div class="hint">
+      Remember to configure your DB connections for all environments and that you have set <code>use_database</code> to
+      <code>true</code> in your <code>app/config/settings.xml</code>.
+  </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
 
   <dt id="general_99">Is it possible to change the directory structure of a module?</dt>
   <dd>Short answer: Yes.<br>

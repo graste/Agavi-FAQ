@@ -176,3 +176,7 @@ h2[id]:hover:after, h2[id]:focus:after {
 .legacy {
     text-decoration: line-through;
 }
+
+code {
+    background-color: #efefef;
+}
