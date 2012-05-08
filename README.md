@@ -10,6 +10,7 @@ and snippets to the FAQ and donate them back. :-)
 For additions or inquiries go to Freenode #agavi IRC channel and ask
 graste or send an email to agavi-faq[at]mivesto[.]de.
 
+Download the FAQ from http://graste.github.com/Agavi-FAQ/ or view it online at http://www.mivesto.de/agavi/agavi-faq.html
 
 Changelog
 ---------
