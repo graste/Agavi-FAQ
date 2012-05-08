@@ -14,7 +14,7 @@ graste or send an email to agavi-faq[at]mivesto[.]de.
 Changelog
 ---------
 
-* 1.0.2
+* 1.0.2 (2012/05/08)
   - Fixed wrong closing XML tags in settings.xml example (Thanks to Michael Heid for the hint)
 * 1.0.1 (2012/02/13)
   - added section about how to use Propel ORM with Agavi (Thanks go to Romuald Kowalczyk and Veikko Mäkinen)
