@@ -379,13 +379,13 @@ AgaviConfig::set('some.setting', 'some_value');
                 &lt;/ae:parameters&gt;
             &lt;/database&gt;
         &lt;/databases&gt;
-        &lt;!--
-            Simple example on how to include e.g. more sensitive database settings from an external file that may have been
-            generated on deployment or similar and contains only things like hostname, db name, port, username and password.
-        --&gt;
-        &lt;xi:include href="%core.app_dir%/../etc/local.databases.xml" xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0) xpointer(/ae:configurations/*)"&gt;
-        &lt;/xi:include&gt;
     &lt;/ae:configuration&gt;
+    &lt;!--
+        Simple example on how to include e.g. more sensitive database settings from an external file that may have been
+        generated on deployment or similar and contains only things like hostname, db name, port, username and password.
+    --&gt;
+    &lt;xi:include href="%core.app_dir%/../etc/local.databases.xml" xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0) xpointer(/ae:configurations/*)"&gt;
+    &lt;/xi:include&gt;
 &lt;/ae:configurations&gt;
 </pre>
     This example's taken from <a href="http://dracoblue.net/dev/utf8-connections-with-propel-in-agavi/127/" title="Go to DracoBlue's blog entry...">DracoBlue's blog entry</a> and extended by a bit of XInclude magic and Doctrine settings.
