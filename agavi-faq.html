@@ -72,7 +72,7 @@ configuration sections).
     <li><a href="#general_5">XInclude? RelaxNG? Schema? Namespaces? How can I make use of that?</a></li>
     <li><a href="#general_6">How do I return XML to the client (like in an Atom/RSS newsfeed)?</a></li>
     <li><a href="#general_7">How do I implement AJAX- or JSON-related solutions using Agavi?</a></li>
-    <li><a href="#general_8">How to set a different exception template for AJAX requests?</a></li>
+    <li><a href="#general_8">How to set different exception templates (e.g. for AJAX requests)?</a></li>
     <li><a href="#general_9">Where to store application settings and how to access them?</a></li>
     <li><a href="#general_10">How to set custom database connection properties?</a></li>
     <li><a href="#general_11">How to get <code>HTTP_*</code> variables?</a></li>
@@ -250,11 +250,43 @@ public function isSimple()
   <dd>similar to the answer above - define route and json output type and then executeJson() method returns json content
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
-  <dt id="general_8">How to set a different exception template for AJAX requests?</dt>
+  <dt id="general_8">How to set different exception templates (e.g. for AJAX requests)?</dt>
   <dd>You can set a different template in your output type definition like this:
 <pre class="sh_xml">
 &lt;output_type exception_template="..."&gt;
 </pre>
+Default exception templates and custom ones per context may be set via <code>settings.xml</code> file. Customizations according
+to the needs of your application are possible per environment, context and output type:
+<pre class="sh_xml">
+&lt;!-- in settings.xml --&gt;
+&lt;exception_templates&gt;
+    &lt;!--
+        this is the exception template that's used by default
+        unless one for a specific context has been defined, or
+        for the current output type
+    --&gt;
+    &lt;!--
+        note that exceptions that occur before a context is even
+        fully initialized, or an exception that happens before
+        the output types are loaded and determined, will use a
+        template defined here
+    --&gt;
+    &lt;exception_template&gt;%core.agavi_dir%/exception/templates/shiny.php&lt;/exception_template&gt;
+    &lt;!-- an example for per-context exception templates --&gt;
+    &lt;!-- per-output-type templates can be set in output_types.xml --&gt;
+    &lt;exception_template context="console"&gt;%core.agavi_dir%/exception/templates/plaintext.php&lt;/exception_template&gt;
+&lt;/exception_templates&gt;
+
+
+&lt;!-- in output_types.xml --&gt;
+&lt;ae:configuration environment="production.*"&gt;
+    &lt;output_types default="html"&gt;
+        &lt;!-- use a different exception template in production environments for HTML --&gt;
+        &lt;output_type name="html" exception_template="%core.template_dir%/exceptions/web-html.php" /&gt;
+    &lt;/output_types&gt;
+&lt;/ae:configuration&gt;
+</pre>
+    This makes it possibles to have the verbose shiny exception template in development while using simple HTTP 500 status error pages in production. 
   <a href="#faq" title="Back to top">&uarr;</a></dd>
   
   <dt id="general_9">Where to store application settings and how to access them?</dt>
