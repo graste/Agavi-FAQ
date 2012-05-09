@@ -74,7 +74,7 @@ configuration sections).
     <li><a href="#general_7">How do I implement AJAX- or JSON-related solutions using Agavi?</a></li>
     <li><a href="#general_8">How to set different exception templates (e.g. for AJAX requests)?</a></li>
     <li><a href="#general_9">Where to store application settings and how to access them?</a></li>
-    <li><a href="#general_10">How to set custom database connection properties?</a></li>
+    <li><a href="#general_10">How to set custom database connection properties (e.g. for Propel or Doctrine)?</a></li>
     <li><a href="#general_11">How to get <code>HTTP_*</code> variables?</a></li>
     <li><a href="#general_12">What about cookies and how can I get/set/remove them?</a></li>
     <li><a href="#general_13">How to do forwards and redirects?</a></li>
@@ -335,7 +335,7 @@ AgaviConfig::set('some.setting', 'some_value');
     in the example above. 
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
-  <dt id="general_10">How to set custom database connection properties?</dt>
+  <dt id="general_10">How to set custom database connection properties (e.g. for Propel or Doctrine)?</dt>
   <dd>You can set additional options to your database connections in your <code>app/config/database.xml</code>
     file (see that <code>settings</code> parameter):
 <pre class="sh_xml">
@@ -359,6 +359,38 @@ AgaviConfig::set('some.setting', 'some_value');
                 &lt;/ae:parameter&gt;      
             &lt;/database&gt;
         &lt;/databases&gt;
+
+        &lt;databases default="db"&gt;
+            &lt;database name="db" class="ProjectDoctrineDatabase"&gt;
+                &lt;ae:parameters&gt;
+                    &lt;ae:parameter name="attributes"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES"&gt;true&lt;/ae:parameter&gt;                                       
+                            &lt;ae:parameter name="Doctrine::ATTR_USE_NATIVE_ENUM"&gt;true&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_VALIDATE"&gt;LENGTHS&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE"&gt;true&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_QUOTE_IDENTIFIER"&gt;true&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="manager_attributes"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_MODEL_LOADING"&gt;2&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="load_models"&gt;%core.lib_dir%/orm&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="charset"&gt;UTF8&lt;/ae:parameter&gt;
+                &lt;/ae:parameters&gt;
+            &lt;/database&gt;
+        &lt;/databases&gt;
+    &lt;/ae:configuration&gt;
+
+    &lt;!--
+        Simple example on how to include e.g. more sensitive database settings from an external file that may have been
+        generated on deployment or similar and contains only things like hostname, db name, port, username and password.
+    --&gt;
+    &lt;xi:include href="%core.app_dir%/../etc/local.databases.xml" xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0) xpointer(/ae:configurations/*)"&gt;
+    &lt;/xi:include&gt;
+
     &lt;/ae:configuration&gt;
 &lt;/ae:configurations&gt;
 </pre>

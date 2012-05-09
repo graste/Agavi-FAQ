@@ -17,6 +17,7 @@ Changelog
 
 * 1.0.3 (2012/05/09)
   - modified the exception template question and answer a bit to be more verbose
+  - extended the custom database settings question and answer to include a Doctrine settings and XInclude example
 * 1.0.2 (2012/05/08)
   - fixed wrong closing XML tags in settings.xml example (Thanks to Michael Heid for the hint)
 * 1.0.1 (2012/02/13)
