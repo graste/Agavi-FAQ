@@ -88,6 +88,8 @@ configuration sections).
     <li><a href="#general_21">What do I need to know about Agavi models and how to use them?</a></li>
     <li><a href="#general_22">How to use custom configuration files?</a></li>
     <li><a href="#general_23">How to use Propel ORM models with Agavi?</a></li>
+    <li><a href="#general_24">How to change the template lookup patterns Agavi uses?</a></li>
+    <li><a href="#general_25">How to use different renderers for different layers of output types?</a></li>
     <li><a href="#general_99">Is it possible to change the directory structure of a module?</a></li>
 </ol>
 
@@ -913,6 +915,111 @@ propel.sql.dir = ${propel.output.dir}/dev/db/sql
       Remember to configure your DB connections for all environments and that you have set <code>use_database</code> to
       <code>true</code> in your <code>app/config/settings.xml</code>.
   </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_24">How to change the template lookup patterns Agavi uses?</dt>
+  <dd>You can customize the default pattern Agavi uses to find templates in the filesystem by overriding the
+    <code>targets</code> parameter on a layer in <code>output_types.xml</code>. This enables your application to
+    have different templates and let Agavi choose the first one that matches the given targets. The following
+    snippet gives an example on how one could implement mobile templates that reuse existing actions and views by
+    letting Agavi first look for <code>Success.mobile.php</code> before trying to use <code>Success.mobile.php</code>.
+    That way you can have a mobile version of your website where it is not strictly necessary to duplicate all templates
+    for the mobile version as you can reuse the original templates. In case you want to adjust a template for mobile
+    devices you can just put a <code>*.mobile.php</code> file next to the existing normal one. The <code>{extension}</code>
+    placeholder is usually set via the <code>default_extension</code> parameter of the renderer used for the layer.
+<pre class="sh_xml">
+&lt;layer name="content"&gt;
+    &lt;parameters&gt;
+        &lt;parameter name="targets"&gt;                                                                                       
+            &lt;parameter&gt;${directory}/${template}.mobile${extension}&lt;/parameter&gt;
+            &lt;parameter&gt;${directory}/${template}${extension}&lt;/parameter&gt;
+        &lt;/parameter&gt;
+    &lt;/parameters&gt;
+&lt;/layer&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_25">How to use different renderers for different layers of output types?</dt>
+  <dd>You can set a different renderer for each of the layers you define in <code>output_types.xml</code> or set dynamically
+    within views:
+<pre class="sh_xml">
+&lt;layer name="user_defined_content" renderer="twig" /&gt;
+</pre>
+    The above feature enables you to define specific layouts with different layers where e.g. all layers are rendered via a
+    <code>AgaviPhpRenderer</code> while the layer that displays sensitive user provided content is rendered using a template
+    engine renderer of your choice that has features such as sandboxing or limited sets of capabilities. The given example
+    uses a renderer named <code>twig</code> (see <code>AgaviTwigRenderer</code> and the <a href="http://twig.sensiolabs.org/"
+    title="See the Twig homepage for usage examples and feature documentation...">Twig homepage</a> for more information) that
+    is usually defined for specific output types. With this knowledge you could do crazy things like XML or Javascript islands
+    within HTML all by defining according layers with appropriate custom renderers that handle escaping or whatever.<br />
+    The following example defines three renderers. Two of them are provided by Agavi itself while the third one is a custom renderer
+    that DracoBlue and me wrote as a small test to make transitioning an existing Agavi application from using PHP as its templating
+    engine to allowing the use of Twig templates where needed. For refactoring reasons this enables you to start using Twig in
+    templates one template at a time while the fallback will always be the PHP template variant.
+<pre class="sh_xml">
+&lt;output_type name="html"&gt;
+    &lt;renderers default="proxy"&gt;                                                                                                          
+        
+        &lt;renderer name="proxy" class="AgaviProxyRenderer"&gt;
+            &lt;ae:parameter name="renderers"&gt;
+                &lt;ae:parameter&gt;twig&lt;/ae:parameter&gt;
+                &lt;ae:parameter&gt;pphp&lt;/ae:parameter&gt;
+            &lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+            
+        &lt;renderer name="pphp" class="ProjectPhpRenderer"&gt;
+            &lt;ae:parameter name="assigns"&gt;
+                &lt;-- default assigns of Agavi omitted --&gt;
+            &lt;/ae:parameter&gt;
+            &lt;ae:parameter name="default_extension"&gt;.php&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="var_name"&gt;t&lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+            
+        
+        &lt;renderer name="twig" class="AgaviTwigRenderer"&gt;
+            &lt;ae:parameter name="assigns"&gt;
+                &lt;-- default assigns of Agavi omitted --&gt;
+            &lt;/ae:parameter&gt;
+            &lt;ae:parameter name="default_extension"&gt;.twig&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="extract_vars"&gt;true&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="options"&gt;
+                &lt;ae:parameter name="auto_escape"&gt;true&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="auto_reload"&gt;true&lt;/ae:parameter&gt;
+            &lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+    &lt;/renderers&gt;
+
+    &lt;layouts default="standard"&gt;
+        &lt;!-- standard layout with a content and a decorator layer --&gt;
+        &lt;layout name="standard"&gt;
+            &lt;layer name="content" /&gt;
+            &lt;layer name="decorator"&gt;
+                &lt;ae:parameter name="directory"&gt;%core.template_dir%/Html&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="template"&gt;HtmlMaster&lt;/ae:parameter&gt;
+            &lt;/layer&gt;
+        &lt;/layout&gt;
+    &lt;/layouts&gt;
+&lt;/output_type&gt;
+</pre>
+    You can find the <a href="https://gist.github.com/2594326" title="Gist of AgaviProxyRenderer class">AgaviProxyRenderer source
+    code on Github</a>. It was written and tested with Agavi v1.0.7. If you use the given example the normal Agavi behaviour on
+    template lookup patterns is still working. That way, if you use the <code>targets</code> parameter for layers given in
+    <a href="#general_24" title="Jump to answer about how to change template lookup patterns per layer">a previous answer</a>,
+    Agavi would try to lookup templates in this order:
+    <ul>
+        <li><code>*.mobile.twig</code></li>
+        <li><code>*.twig</code></li>
+        <li><code>*.mobile.php</code></li>
+        <li><code>*.php</code></li>
+    </ul>
+    This lookup behaviour does of course also work for the HtmlMaster template specified as a decorator. Please notice the options
+    given to the <code>AgaviTwigRenderer</code>. It sets automatic escaping of all extracted variables (set via <code>setAttribute()</code>
+    in views and enables automatic reloading of modified templates even when the <code>core.debug</code> setting of Agavi is set to false.
+    By default Agavi uses the Twig template caching mechanism when not run in debug mode. For details see the renderer and the Twig docs.
+    <div class="hint">
+        The normal Agavi lookup patterns for locale specific templates like <code>*.de_DE.php</code> or
+        <code>en/*.php</code> were omitted for brewity reasons in the above order listing.
+    </div>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
   <dt id="general_99">Is it possible to change the directory structure of a module?</dt>

@@ -15,6 +15,9 @@ Download the FAQ from http://graste.github.com/Agavi-FAQ/ or view it online at h
 Changelog
 ---------
 
+* 1.0.4 (2012/05/10)
+  - added answer about template lookup patterns modification
+  - added answer about using multiple renderers for output types
 * 1.0.3 (2012/05/09)
   - modified the exception template question and answer a bit to be more verbose
   - extended the custom database settings question and answer to include a Doctrine settings and XInclude example
