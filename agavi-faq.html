@@ -1742,13 +1742,24 @@ $this-&gt;getContext()-&gt;getRequest()-&gt;setAttribute('populate', $data, 'org
 
 &lt;arguments base="rows[]"&gt;
     &lt;argument/&gt;
-&lt;/argument&gt;
+&lt;/arguments&gt;
 </pre>
     Note the usage of the <code>base</code> attribute in certain places. In addition to this there's
     a new <a href="http://trac.agavi.org/browser/tags/1.0.3/src/validator/AgaviArraylengthValidator.class.php"
     title="Go to class definition in Agavi trac..."><code>AgaviArraylengthValidator</code></a>
     since Agavi v1.0, which lets you specify <code>min</code> and <code>max</code> parameters
     to validate the number of elements in an array.
+	 
+    Furthermore, if you would like to overwrite an input array with results from a validator, you can
+    do so by specifying an export parameter as follows:
+<pre class="sh_xml">
+&lt;arguments base="rows[]"&gt;
+    &lt;argument/&gt;
+&lt;/arguments&gt;
+&lt;ae:parameters&gt;
+    &lt;ae:parameter name="export"&gt;rows[%2$s]&lt;/ae:parameter&gt;
+&lt;/ae:parameters&gt;
+</pre> 
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
   <dt id="validation_13">Is there an example for the <code>AgaviDateTimeValidator</code>?</dt>
