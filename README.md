@@ -15,6 +15,8 @@ Download the FAQ from http://graste.github.com/Agavi-FAQ/ or view it online at h
 Changelog
 ---------
 
+* 1.0.5 (2012/06/18)
+  - Added small array export example for validators
 * 1.0.4 (2012/05/10)
   - added answer about template lookup patterns modification
   - added answer about using multiple renderers for output types
