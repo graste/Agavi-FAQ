@@ -1,0 +1,3018 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Agavi common questions and answers (FAQ)</title>
+  <link rel="stylesheet" href="css/faq-default.css" type="text/css" media="screen">
+  <link type="text/css" rel="stylesheet" href="shjs-0.6/css/sh_nedit.css">
+</head>
+
+<body onload="sh_highlightDocument('shjs-0.6/lang/', '.js');" id="faq">
+
+<div>
+
+<h1>Frequently Asked Questions (FAQ) - Agavi PHP Framework</h1>
+
+<p class="hint">I uploaded this document to github. You can find it under <a href="http://github.com/graste/Agavi-FAQ" title="Visit Agavi FAQ on GitHub...">http://github.com/graste/Agavi-FAQ</a>. 
+
+<p class="warning">
+This <strong>unofficial</strong> FAQ is a work in progress. All information is provided as is without any guarantees. Use
+it at your own risk. Oh, and beware of that yellow fade animated gif in the background. Instant eye cancer. ;-)<br>
+</p>
+
+<div class="introduction">
+
+<p>
+On this page a few common questions are answered. Examples are given where appropriate.
+If you have questions that are not answered here, visit the user mailing list, join the <a href="http://trac.agavi.org/wiki/IRC" title="Go to IRC info page">IRC channel</a>
+or search through <a href="http://lists.agavi.org/mailman/listinfo" title="Go to mailing list info page">mailing list archive</a>
+or <a href="http://www.agavi.org/irclogs/" title="Go to IRC logs page">IRC channel logs</a> as a start.
+The <a href="http://trac.agavi.org/browser/branches/1.0/src/" title="Go to trac SVN view of Agavi 1.0 sources...">Agavi source code</a>
+is well documented and the <a href="http://trac.agavi.org/browser/branches/1.0/samples/" title="Go to trac SVN view of Agavi 1.0 sample application...">sample application</a>
+should give you some good practices to start with. In case you want a question added here,
+ask via mail (<a href="mailto:agavi-faq@mivesto.de" title="Send email to author">agavi-faq@mivesto.de</a>) or
+visit the IRC channel (ask graste).</p>
+
+<p>
+The examples in this FAQ are skeletons most of the time. It is recommended to be strict when
+checking user input such as header variables, cookies, files or request parameters. The validator
+examples are just there to get you started with some features. The usage of fragment caching may
+lead to side effects if you define caches only for production environment and then begin to wonder
+why some code or slot or whatever doesn't get executed as it always was before. Please think twice
+before copying and pasting example code (which is not production ready on itself most of the time).
+</p>
+
+<p>
+Most <a href="http://www.satisfice.com/blog/archives/27" title="Go to 'No Best Practices' article by James Bach...">good practices or patterns</a>
+are probably to be found in the <a href="http://trac.agavi.org/browser/branches/1.0/samples/" title="Go to trac SVN view of Agavi 1.0 sample application...">sample application</a>
+or the official <a href="http://www.agavi.org/documentation/tutorial" title="Go to introductory Agavi quick start tutorial...">Agavi quick start tutorial</a>.
+</p>
+ 
+</div>
+
+<p class="hint">
+With Agavi you can have different contexts (think 'web', 'console' or 'soap') and multiple environments
+(like 'development', 'staging', 'production' etc.). The <strong><code>&lt;ae:configuration&gt;</code> sections
+in the config files are sorted first (vanilla, environment-only, context-only, environment+context) and
+then merged together.</strong> Knowing this, you can just define default settings and then overwrite them
+in context- or environment-specific sections. Some examples below make use of this. You may use regular expressions
+like this in the attribute: <code>environment="development.*"</code>. This would allow for common settings for
+all environments that start with <code>development</code> (so John and Chuck from your dev-team get those
+settings in their private <code>development-john-rambo</code> or <code>development-chuck-norris</code>
+configuration sections).
+</p>
+
+<h2 id="general-questions">General topics</h2>
+<ol>
+    <li><a href="#general_1">Is there a way to change the action method mappings of HTTP verbs (e.g. swap PUT/POST for RESTful applications)?</a></li>
+    <li><a href="#general_2">Is there any way to set a template file extension per output type?</a></li>
+    <li><a href="#general_4">What's that <code>isSimple()</code> method all about (in an action)?</a></li>
+    <li><a href="#general_5">XInclude? RelaxNG? Schema? Namespaces? How can I make use of that?</a></li>
+    <li><a href="#general_6">How do I return XML to the client (like in an Atom/RSS newsfeed)?</a></li>
+    <li><a href="#general_7">How do I implement AJAX- or JSON-related solutions using Agavi?</a></li>
+    <li><a href="#general_8">How to set different exception templates (e.g. for AJAX requests)?</a></li>
+    <li><a href="#general_9">Where to store application settings and how to access them?</a></li>
+    <li><a href="#general_10">How to set custom database connection properties (e.g. for Propel or Doctrine)?</a></li>
+    <li><a href="#general_11">How to get <code>HTTP_*</code> variables?</a></li>
+    <li><a href="#general_12">What about cookies and how can I get/set/remove them?</a></li>
+    <li><a href="#general_13">How to do forwards and redirects?</a></li>
+    <li><a href="#general_14">How to return HTTP status codes?</a></li>
+    <li><a href="#general_15">Where can I change the session settings?</a></li>
+    <li><a href="#general_16">Fast! I need an example of slots and how to use them!</a></li>
+    <li><a href="#general_17">How to load different layouts?</a></li>
+    <li><a href="#general_18">How to re-use input templates to display errors?</a></li>
+    <li><a href="#general_19">How to load another master template?</a></li>
+    <li><a href="#general_20">What is the Agavi startup sequence?</a></li>
+    <li><a href="#general_21">What do I need to know about Agavi models and how to use them?</a></li>
+    <li><a href="#general_22">How to use custom configuration files?</a></li>
+    <li><a href="#general_23">How to use Propel ORM models with Agavi?</a></li>
+    <li><a href="#general_24">How to change the template lookup patterns Agavi uses?</a></li>
+    <li><a href="#general_25">How to use different renderers for different layers of output types?</a></li>
+    <li><a href="#general_99">Is it possible to change the directory structure of a module?</a></li>
+</ol>
+
+<h2 id="routing-questions">Routing related topics</h2>
+<ol>
+    <li><a href="#routing_0">What do I have to know about Agavi's routing system?</a></li>
+    <li><a href="#routing_1">How to define default values for routing parameters?</a></li>
+    <li><a href="#routing_2">How to use those curly braces for min/max quantifiers?</a></li>
+    <li><a href="#routing_3">How to make route pattern matching case-insensitive?</a></li>
+    <li><a href="#routing_4">What additional options are there to be specified when generating routes?</a></li>
+    <li><a href="#routing_5">How to determine the current matched routes?</a></li>
+    <li><a href="#routing_6">What are routing callbacks and how can I use them?</a></li>
+    <li><a href="#routing_7">How do I generate routes with different output types?</a></li>
+</ol>
+
+<h2 id="validation-questions">Validation related topics</h2>
+<ol>
+    <li><a href="#validation_0">What are the validation modes and what do I need to know about them?</a></li>
+    <li><a href="#validation_1">Is it possible to define nested validators?</a></li>
+    <li><a href="#validation_2">What is the name of a validator for?</a></li>
+    <li><a href="#validation_3">How to prevent performing other validations on a field in case one validator fails?</a></li>
+    <li><a href="#validation_4">Can validators depend on other validators?</a></li>
+    <li><a href="#validation_5">Can the "depends" attribute receive more than one dependency?</a></li>
+    <li><a href="#validation_6">Is there a possibility to register validators manually in an action?</a></li>
+    <li><a href="#validation_7">Is there any example of custom file validations or the <code>AgaviImageFileValidator</code>?</a></li>
+    <li><a href="#validation_8">How can I repopulate readonly/disabled input fields?</a></li>
+    <li><a href="#validation_9">How to manually output error messages in a view?</a></li>
+    <li><a href="#validation_10">Is there a better way than using <code>isSet</code> or <code>isNotEmpty</code> to validate route parameters?</a></li>
+    <li><a href="#validation_11">How do I use the <code>inarray</code> validator?</a></li>
+    <li><a href="#validation_12">How do I validate array input?</a></li>
+    <li><a href="#validation_13">Is there an example for the <code>AgaviDateTimeValidator</code>?</a></li>
+    <li><a href="#validation_14">How do I check validation results and retrieve the incidents of a failed validator?</a></li>
+    <li><a href="#validation_15">How to handle checkbox input fields?</a></li>
+    <li><a href="#validation_16">I'm writing the same validation code over and over again, which doesn't feel very DRY. How to solve this?</a></li>
+    <li><a href="#validation_17">How to write a custom validator?</a></li>
+    <li><a href="#validation_18">How to register shortnames for validators and why should I use them?</a></li>
+    <!-- multiple forms on page: write is called on slots that contain forms and so validation fails -->
+</ol>
+
+<h2 id="caching-questions">Caching related topics</h2>
+<ol>
+    <li><a href="#caching_0">Is it possible to (globally) enable or disable fragment caching?</a></li>
+    <li><a href="#caching_1">What are caching groups and how are they used for fragment caching?</a></li>
+    <li><a href="#caching_2">Which <code>source</code> attribute values are available and what do they do?</a></li>
+    <li><a href="#caching_3">Any tips before starting to use fragment caching intensively?</a></li>
+</ol>
+
+<h2 id="translation-questions">Translation related topics</h2>
+<ol>
+    <li><a href="#translation_0">Quickstart</a></li>
+    <li><a href="#translation_1">How do I use and customize a currency format?</a></li>
+</ol>
+
+<h2 id="filter-questions">Filter related topics</h2>
+<ol>
+  <li><a href="#filter_0">What kind of filters are available by default and how to configure them?</a></li>
+  <li><a href="#filter_1">tbd (FormPopulationFilter tipps)</a></li>
+  <li><a href="#filter_2">What's the execution order of filters?</a></li>
+</ol>
+
+<h2 id="testing-questions">Testing related topics</h2>
+<ol>
+  <li><a href="#testing_0">How do I start?</a></li>
+<!--  <li><a href="#testing_1">Which types of tests are supported by Agavi and where to put them?</a></li> -->
+</ol>
+
+<h2 id="misc-questions">Misc topics</h2>
+<ol>
+  <li><a href="#misc_0">How do I get improved code completion in Netbeans or Eclipse or <code>$favoriteIDE</code>?</a></li>
+  <li><a href="#misc_1">How do I set an exit code in console context or shell applications?</a></li>
+</ol>
+
+<hr>
+
+<h2 id="general-answers">General topics</h2>
+<dl>
+  <dt id="general_1">Is there a way to change the action method mappings of HTTP verbs (e.g. swap PUT/POST for RESTful applications)?</dt>
+  <dd>By default Agavi maps <code>executeCreate()</code> with HTTP PUT, <code>executeWrite()</code>
+    with HTTP POST, <code>executeRead()</code> with HTTP GET and <code>executeRemove()</code> with
+    HTTP DELETE. If you want to change these mappings modify the <code>app/config/factories.xml</code>
+    file and add the following:
+<pre class="sh_xml">
+&lt;request class="AgaviWebRequest"&gt;
+    &lt;ae:parameter name="method_names"&gt;
+        &lt;ae:parameter name="POST"&gt;create&lt;ae:parameter&gt;
+        &lt;ae:parameter name="GET"&gt;read&lt;ae:parameter&gt;
+        &lt;ae:parameter name="PUT"&gt;write&lt;ae:parameter&gt;
+        &lt;ae:parameter name="DELETE"&gt;remove&lt;ae:parameter&gt;
+    &lt;ae:parameter&gt;
+&lt;request&gt;
+</pre>
+    The above mappings are the default ones defined by Agavi. Please note, that you may use any arbitrary request method you want to support.
+    <p class="hint">To support uncommon or custom request methods use a specific <code>execute[Requestmethod]()</code> in your
+    actions to react to different specific request methods OR use the <code>execute()</code> method for any request method. Let's say you
+    want your application to react to <code>OPTIONS</code> or <code>HEAD</code> requests: Just create <code>executeOptions()</code> and
+    <code>executeHead()</code> in your action and be done. Remember, that you can only get validated parameters, headers, files
+    and cookies. To test your <code>executeHead()/executeOptions()</code> you may use something like
+    <code>curl -I http://route/to/action</code> or <code>curl -X OPTIONS http://route/to/action</code>.</p>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_2">Is there any way to set a template file extension per output type?</dt>
+  <dd>There are multiple possibilities. You can set an extension per individual layer using
+    <code>$this-&gt;getLayer('content')-&gt;setExtension($whatever);</code> or do this in the config
+    or set the default_extension parameter of the   renderer. You could set a
+    <code>&lt;parameter name="extension"&gt;.whatever&lt;/parameter&gt;</code> to the relevant
+    layer as <code>setExtension()</code> is just a <code>__call()</code> overload for <code>setParameter('.extension')</code>.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_4">What's that <code>isSimple()</code> method all about (in an action)?</dt>
+  <dd>The <code>isSimple()</code> method determines whether the actions' <code>validate*</code>
+    and <code>execute*</code> methods are called. If <code>isSimple()</code> returns <code>true</code>,
+    action validation and execution are bypassed and the default view (see <code>getDefaultView()</code>)
+    is executed. Note also, that <em>no filters are run (not even the security filter)</em> and
+    no request data is available except for arguments explicitly passed to the container.<br><br>
+    If you want to use an action both normal and as a simple slot you can try this:
+<pre class="sh_php">
+public function isSimple()
+{
+    return (bool)$this-&gt;getContainer()-&gt;getParameter('is_slot'); // only simple when run as slot
+}
+</pre>
+    Remember, that you have to validate parameters given to an action, if that action's not simple
+    (and you only get parameters if there's at least an <code>execute*()</code> method).
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_5">XInclude? RelaxNG? Schema? Namespaces? How can I make use of that?</dt>
+  <dd>TBD - for some examples see the sample application's <code>output_types.xml</code> file:
+<pre class="sh_xml">
+&lt;!-- include common layer definitions from the sandbox element --&gt;
+&lt;xi:include xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0)
+                         xmlns(ot=http://agavi.org/agavi/config/parts/output_types/1.0)
+                         xpointer(/ae:configurations/ae:sandbox/ot:layers/*)" /&gt;
+</pre>
+<!-- 
+
+  &lt;route name=".product" pattern="^/(id:\d+)" action="Product"&gt;
+    &lt;route name=".view" pattern="^$" action=".View" /&gt;
+    
+  &lt; there are also route ".edit", ".delete" etc
+  Where should I place validator? Is it possible to create validators chain?
+  
+  you can use parent="..." and xincludes to import shared validation definitions
+  in case you have nested routes like that etc
+  
+  no, validation for routes, each level of routes has its own validation file. SOmething like that
+  in the example above I have to include the same code (that checks id) into all validation XMLs. 
+
+ -->
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_6">How do I return XML to the client (like in an Atom/RSS newsfeed)?</dt>
+  <dd>".xml" route and xml output type with executeXml() method to return xml document instead of template
+    <a href="http://groups.google.com/group/agavi-users/browse_thread/thread/b476c38d1afe9b6f">use something like this as example...</a>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_7">How do I implement AJAX- or JSON-related solutions using Agavi?</dt>
+  <dd>similar to the answer above - define route and json output type and then executeJson() method returns json content
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_8">How to set different exception templates (e.g. for AJAX requests)?</dt>
+  <dd>You can set a different template in your output type definition like this:
+<pre class="sh_xml">
+&lt;output_type exception_template="..."&gt;
+</pre>
+Default exception templates and custom ones per context may be set via <code>settings.xml</code> file. Customizations according
+to the needs of your application are possible per environment, context and output type:
+<pre class="sh_xml">
+&lt;!-- in settings.xml --&gt;
+&lt;exception_templates&gt;
+    &lt;!--
+        this is the exception template that's used by default
+        unless one for a specific context has been defined, or
+        for the current output type
+    --&gt;
+    &lt;!--
+        note that exceptions that occur before a context is even
+        fully initialized, or an exception that happens before
+        the output types are loaded and determined, will use a
+        template defined here
+    --&gt;
+    &lt;exception_template&gt;%core.agavi_dir%/exception/templates/shiny.php&lt;/exception_template&gt;
+    &lt;!-- an example for per-context exception templates --&gt;
+    &lt;!-- per-output-type templates can be set in output_types.xml --&gt;
+    &lt;exception_template context="console"&gt;%core.agavi_dir%/exception/templates/plaintext.php&lt;/exception_template&gt;
+&lt;/exception_templates&gt;
+
+
+&lt;!-- in output_types.xml --&gt;
+&lt;ae:configuration environment="production.*"&gt;
+    &lt;output_types default="html"&gt;
+        &lt;!-- use a different exception template in production environments for HTML --&gt;
+        &lt;output_type name="html" exception_template="%core.template_dir%/exceptions/web-html.php" /&gt;
+    &lt;/output_types&gt;
+&lt;/ae:configuration&gt;
+</pre>
+    This makes it possibles to have the verbose shiny exception template in development while using simple HTTP 500 status error pages in production. 
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+  
+  <dt id="general_9">Where to store application settings and how to access them?</dt>
+  <dd>Application wide settings can easily be stored in <code>app/config/settings.xml</code>.
+    You can define different settings and values for all environments and contexts you use.
+<pre class="sh_xml">
+&lt;ae:configuration&gt; 
+    &lt;settings prefix="Blog."&gt; 
+        &lt;setting name="enabled"&gt;true&lt;/setting&gt; 
+        &lt;setting name="EntriesPerPage"&gt;25&lt;/setting&gt; 
+        &lt;setting name="Theme"&gt;green&lt;/setting&gt;
+        &lt;setting name="More"&gt;
+            &lt;ae:parameters&gt;
+                &lt;ae:parameter name="foo"&gt;bar&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="blah"&gt;blub&lt;/ae:parameter&gt;
+            &lt;/ae:parameters&gt;
+        &lt;/setting&gt;
+    &lt;/settings&gt; 
+&lt;/ae:configuration&gt; 
+
+&lt;ae:configuration environment="production"&gt; 
+    &lt;settings prefix="Blog."&gt; 
+        &lt;setting name="EntriesPerPage"&gt;10&lt;/setting&gt; 
+    &lt;/settings&gt; 
+&lt;/ae:configuration&gt; 
+</pre>
+You then get values like this: 
+<pre class="sh_php">
+$entries_per_page = AgaviConfig::get('Blog.EntriesPerPage', $default_value_if_not_defined);
+</pre>
+    Getting the <code>Blog.More</code> settings entry will result in an indexed array you can use.<br><br>
+    If you have settings that are specific to various modules you can use each module's
+    <code>module.xml</code> files to store values. You access these settings like this:
+<pre class="sh_php">
+AgaviConfig::get('modules.lowercase_module_name.SomeSetting');
+</pre>
+    Remember, that you can always set values programatically using:
+<pre class="sh_php">
+AgaviConfig::set('some.setting', 'some_value'); 
+</pre>
+    as you can see in you application's <code>index.php</code> or <code>config.php</code> files. Another thing to
+    know about the different settings in different contexts and environments is the
+    following: <strong><code>&lt;ae:configuration&gt;</code> sections are sorted first (vanilla, environment-only,
+    context-only, environment+context) and then merged together.</strong> Knowing this you can just define
+    default settings and then overwrite them in context- or environment-specific sections like
+    in the example above. 
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_10">How to set custom database connection properties (e.g. for Propel or Doctrine)?</dt>
+  <dd>You can set additional options to your database connections in your <code>app/config/database.xml</code>
+    file (see that <code>settings</code> parameter):
+<pre class="sh_xml">
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/databases/1.0"&gt;
+    &lt;ae:configuration environment="development"&gt;
+        &lt;databases default="db"&gt;
+            &lt;database name="propel" class="AgaviPropelDatabase"&gt;
+                &lt;ae:parameter name="config"&gt;%core.app_dir%/config/propelproject-conf.php&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="overrides"&gt;
+                    &lt;ae:parameter name="connection"&gt;
+                        &lt;ae:parameter name="dsn"&gt;mysql:dbname=icanhazdb;host=127.0.0.1&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="user"&gt;w00t&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="password"&gt;not_default_pass&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="settings"&gt;
+                            &lt;ae:parameter name="charset"&gt;
+                                &lt;ae:parameter name="value"&gt;utf8&lt;/ae:parameter&gt;
+                            &lt;/ae:parameter&gt;
+                        &lt;/ae:parameter&gt;
+                    &lt;/ae:parameter&gt;
+                &lt;/ae:parameter&gt;      
+            &lt;/database&gt;
+            &lt;database name="db" class="AgaviDoctrineDatabase"&gt;
+                &lt;ae:parameters&gt;
+                    &lt;ae:parameter name="attributes"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES"&gt;true&lt;/ae:parameter&gt;                                       
+                            &lt;ae:parameter name="Doctrine::ATTR_USE_NATIVE_ENUM"&gt;true&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_VALIDATE"&gt;LENGTHS&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE"&gt;true&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_QUOTE_IDENTIFIER"&gt;true&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="manager_attributes"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter name="Doctrine_Core::ATTR_MODEL_LOADING"&gt;2&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="load_models"&gt;%core.lib_dir%/orm&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="charset"&gt;UTF8&lt;/ae:parameter&gt;
+                &lt;/ae:parameters&gt;
+            &lt;/database&gt;
+        &lt;/databases&gt;
+    &lt;/ae:configuration&gt;
+    &lt;!--
+        Simple example on how to include e.g. more sensitive database settings from an external file that may have been
+        generated on deployment or similar and contains only things like hostname, db name, port, username and password.
+    --&gt;
+    &lt;xi:include href="%core.app_dir%/../etc/local.databases.xml" xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0) xpointer(/ae:configurations/*)"&gt;
+    &lt;/xi:include&gt;
+&lt;/ae:configurations&gt;
+</pre>
+    This example's taken from <a href="http://dracoblue.net/dev/utf8-connections-with-propel-in-agavi/127/" title="Go to DracoBlue's blog entry...">DracoBlue's blog entry</a> and extended by a bit of XInclude magic and Doctrine settings.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_11">How to get <code>HTTP_*</code> variables?</dt>
+  <dd>The <code>AgaviWebRequestDataHolder</code> defines <code>headers</code>, <code>files</code>
+    and <code>cookies</code> as sources (apart from GET/POST parameters, which you simply access
+    by validating them and then using <code>$rd-&gt;getParameter('name', $default)</code>).<br>
+    The <code>headers</code> source contains all <code>HTTP_*</code> variables you might want to use. The
+    only thing between you and your values is strict validation, as these settings are
+    user provided request data and therefore unvalidated input. Here is an example how to access header variables:
+<pre class="sh_php">
+// note the stripped HTTP_ prefix and the UPPERCASE characters:
+$rd-&gt;get('headers','USER_AGENT'); // AgaviRequestDataHolder class
+$rd-&gt;getHeader('User-Agent'); // AgaviWebRequestDataHolder class
+</pre>
+    You validate them by using the <code>source</code> parameter in your validator specification:
+<pre class="sh_xml">
+&lt;validator ... source="headers"&gt;
+    &lt;argument&gt;USER_AGENT&lt;/argument&gt;
+&lt;/validator&gt;
+&lt;-- or perhaps for referer checking: --&gt;
+&lt;validator ... source="headers"&gt;
+    &lt;-- you could e.g. check for a valid (and/or allowed) URL, the non-existance
+        of Javascript/HTML/SQL/XPath/whatever code snippets etc. --&gt;
+    &lt;argument&gt;REFERER&lt;/argument&gt;
+&lt;/validator&gt;
+</pre>
+    <div class="warning">
+        We urge you to be _really_ strict when checking user input such as header variables, cookies, files or parameters.
+        It is _not_ proficient to just use a simple <code>string</code> validator as people could send you Javascript, SQL
+        or whatever malicious input data not only using parameters, but instead trying (sometimes delayed) attacks using cookies
+        and headers. The next time you use plain SQL and someone surfs on your page using a referer set to
+        <strong>' OR 1=1 -- "|#</strong> you will definitively be thankful for strict validation and _good_
+        validation rules in your validators.
+    </div>
+    <br>
+    <p class="hint">Please note, that you can access <code>$_SERVER</code> (like <code>$_SERVER['SERVER_NAME']</code>) and <code>$_ENV</code> directly,
+    as it is mostly not user provided data (and not really standardized as well).</p>
+    To give you a very simple example of a custom validator, that exports an <code>IS_AJAX</code> header parameter to your action if the
+    current request was issued via Javascript's <code>XmlHttpRequest</code> method, see the following snippets:
+<pre class="sh_xml">
+&lt;!-- validate.xml --&gt;
+&lt;validator class="SearchHttpXRequestedWithValidator" name="no_ajax_submit" required="false" provides="search[submit_search]" source="headers"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;X_REQUESTED_WITH&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="export"&gt;IS_AJAX&lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+and
+<pre class="sh_php">
+/* SearchHttpXRequestedWithValidator.class.php */
+class SearchHttpXRequestedWithValidator extends AgaviStringValidator 
+{
+    protected function validate()
+    {
+        $argument = $this-&gt;getArgument();
+        $value = $this-&gt;getData($argument);
+        $this-&gt;export(false !== stristr($value, 'XMLHttpRequest'));
+        return true;
+    }
+    
+    protected function checkAllArgumentsSet($throwError = true)
+    {
+        return true; // see AgaviValidator::checkAllArgumentsSet(); used to export default value in case of missing parameter
+    }
+}
+</pre>
+    Just add the custom <code>SearchHttpXRequestedWithValidator</code> to an <code>autoload.xml</code>, use it in a validation XML file and ask
+    for AJAX requests in your action's <code>execute*()</code> method (or wherever) like this:
+<pre class="sh_php">
+$this-&gt;is_ajax_request = $rd-&gt;getHeader('IS_AJAX', false);
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_12">What about cookies and how can I get/set/remove them?</dt>
+  <dd>Example how to set a cookie in a view:
+<pre class="sh_php">
+$this-&gt;getResponse()-&gt;setCookie('cookieName', $value);
+$this-&gt;getResponse()-&gt;setCookie('cookieName', $value, '+14 days'); // notice the hot strtotime syntax
+</pre>
+    If you want to read cookies, you have to validate them as they are user provided input data. Other cookie related
+    methods can be found in <a href="http://trac.agavi.org/browser/branches/1.0/src/response/AgaviWebResponse.class.php#L465" title="Go to AgaviWebResponse class...">AgaviWebResponse</a>.
+    To remove a cookie just call <code>unsetCookie($name, $path, $domain, $secure, $httponly)</code> with the same
+    parameters you used for setting the cookie. To get a cookie value simply call <code>getCookie($name)</code>.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_13">How to do forwards and redirects?</dt>
+  <dd>You can either forward internally to another action or do a full redirect to another absolute
+    URL (e.g. redirect-after-post pattern):
+<pre class="sh_php">
+public function executeHtml(AgaviRequestDataHolder $rd)
+{
+    // ... some code ...
+
+    if (some_constraint)
+    {    
+        // redirect to a specific URL:
+        $this-&gt;getContainer()-&gt;getResponse()-&gt;setRedirect($absolute_target_url);
+    
+        // or redirect like this ('relative'=&gt;false may be omitted as Agavi sets it automatically for you)
+        $this-&gt;getResponse()-&gt;setRedirect($this-&gt;getContext()-&gt;getRouting()-&gt;gen('route.to.somewhere', $params_array, array('relative' =&gt; false)));
+        return; // no false or AgaviView::NONE here
+    }
+    
+    // or forward to another action (the default 404 page in this case):
+    return $this-&gt;createForwardContainer(AgaviConfig::get('actions.error_404_module'), AgaviConfig::get('actions.error_404_action'));
+}
+</pre>
+    When forwarding, the output type et cetera should be respected. If you want to set these things explicitly, use the three
+    optional parameters <code>$arguments</code>, <code>$outputType</code> and <code>$requestMethod</code>.
+    <div class="hint">Forwarding and redirecting only works inside views in Agavi. This is due to the
+    fact, that redirecting and forwarding works differently for each output type. E.g. HTTP redirects in HTML
+    based (web-) applications aren't available in SOAP or XML-RPC contexts. As your actions are not supposed
+    to know, which output type they support (now or in the future), you do all your redirects and forwards in views. 
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_14">How to return HTTP status codes?</dt>
+  <dd>Just do something like this in your view:
+<pre class="sh_php">
+$this-&gt;getResponse()-&gt;setHttpStatusCode('301'); // 301 moved permanently
+$this-&gt;getResponse()-&gt;setHttpStatusCode('304'); // 304 not modified
+$this-&gt;getResponse()-&gt;setHttpStatusCode('402'); // 402 payment required ;-)
+$this-&gt;getResponse()-&gt;setHttpStatusCode('404'); // 404 not found
+$this-&gt;getResponse()-&gt;setHttpStatusCode('405'); // 405 method not allowed
+$this-&gt;getResponse()-&gt;setHttpStatusCode('500'); // 500 internal server error
+// etc. pp., you probably know all those HTTP codes...
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_15">Where can I change the session settings?</dt>
+  <dd>By default Agavi uses the session settings of your PHP installation. The default
+    name of the Agavi session cookie is <code>Agavi</code>. You can override the PHP defaults
+    by adding parameters to the <code>&lt;storage&gt;</code> element in <code>app/config/factories.xml</code>.
+<pre class="sh_xml">
+&lt;storage class="AgaviSessionStorage"&gt;
+    &lt;ae:parameter name="session_save_path"&gt;some path&lt;/ae:parameter&gt; &lt;!-- current directory used for session data storage --&gt;
+    &lt;ae:parameter name="session_cookie_lifetime"&gt;10800&lt;/ae:parameter&gt; &lt;!-- lifetime of the session cookie in seconds --&gt;
+    &lt;ae:parameter name="session_cookie_path"&gt;/&lt;/ae:parameter&gt; &lt;!-- path on the domain (single slash for all paths) --&gt;
+    &lt;ae:parameter name="session_cookie_domain"&gt;www.example.com&lt;/ae:parameter&gt; &lt;!-- cookie domain (be careful with leading '.' as cookies
+                                                                                               are then visible to all subdomains) --&gt;
+    &lt;ae:parameter name="session_cookie_secure"&gt;true&lt;/ae:parameter&gt; &lt;!-- true for secure connection cookie only --&gt;
+    &lt;ae:parameter name="session_cookie_httponly"&gt;true&lt;/ae:parameter&gt; &lt;!-- set httponly flag (beware of XMLHttpRequest issues
+                     - otherwise it's not a bad measure (even though it doesn't protect you e. g. from HTTP TRACE attacks or the like) --&gt;
+
+    &lt;!-- for other parameters see AgaviSessionStorage file --&gt;
+&lt;/storage&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_16">Fast! I need an example of slots and how to use them!</dt>
+  <dd>Slots are a decent solution to reuse existing functionality. You may either
+    define slots in <code>app/config/output_types.xml</code> (to include them in the
+    master template) or create/delete slot containers dynamically "on the fly" in your views.
+    Defining slots inside <code>&lt;layer&gt;</code> definitions in <code>output_types.xml</code>
+    could look like this:
+<pre class="sh_xml">
+&lt;slots&gt;
+    &lt;slot name="header" module="Default" action="Header" /&gt;
+    &lt;slot name="navigation" module="Default" action="Navigation.Main" /&gt;
+        &lt;ae:parameter name="page"&gt;%core.template_dir%/static/page.html&lt;/ae:parameter&gt;
+    &lt;/slot&gt;
+    &lt;slot name="footer" module="Default" action="Footer"/&gt;
+&lt;/slots&gt;
+</pre>
+    To be able to use the given parameters in a slot you have to validate them. If you want to
+    create slot containers in a view, try it like this:
+<pre class="sh_php">
+// in view:
+$this-&gt;getLayer('content')-&gt;setSlot('slotName', $this-&gt;createSlotContainer(
+            'ModuleName',               // name of module to use
+            'Some.AwesomeActionName',   // name of action to execute
+            array('param' =&gt; 'value'),  // parameters to pass to the slot
+            'html',                     // output type to use
+            'write'                     // request method to use
+        ));
+
+// in template:
+if (!empty($slots['slotName'])
+{
+    echo $slots['slotName'];
+}
+</pre>
+    You don't have to pass parameters explicitly to the slot, as it will have a copy of all the
+    current request parameters. The output type and request method parameters are optional, too.
+    To give you an impression on how flexible Agavi's output type, layer and slot handling is, see this: 
+<pre class="sh_php">
+// to change the action of a specific slot (you can set the module name as well)
+$this-&gt;getLayer('content')-&gt;getSlot('slotName')-&gt;setActionName('SomeNewActionName');
+
+// create and append layer when you need one in a view
+$this-&gt;appendLayer($this-&gt;createLayer('AgaviFileTemplateLayer', 'content'));
+</pre>
+    <br>
+    <div class="hint">
+    Slots are rendered <em>after the main action/view</em> has run, but <em>before the main template</em> is rendered.
+    Decorators are rendered after that. This makes it possible to change the layout to be used in the
+    main view and add and remove slots dynamically as you like. Additionally you can set request
+    attributes for later use in the decorator slots.
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_17">How to load different layouts?</dt>
+  <dd>You may define different layouts in your <code>app/config/output_types.xml</code> and
+    then choose which layout to load in your views like this:
+<pre class="sh_php">
+$this-&gt;setupHtml($rd, 'layoutName');
+</pre>
+    Imagine you have some modules and each module has multiple (nested) actions. You then can easily
+    override <code>setupHtml</code> in each module's <code>BaseView</code> class and set a default
+    layout name for that module (so different sections of your homepage could be organized into
+    modules with different layouts/designs all over).
+<pre class="sh_xml">
+&lt;!-- app/config/output_types.xml example part: --&gt;
+&lt;layout name="default"&gt;
+    &lt;layers&gt;
+        &lt;layer name="content"/&gt;
+        &lt;layer name="decorator"&gt;
+            &lt;slots&gt;
+                &lt;slot name="header" module="Default" action="Header" /&gt;
+                &lt;slot name="navigation" module="Default" action="Navigation" /&gt;
+                &lt;slot name="footer" module="Default" action="Footer"/&gt;
+            &lt;/slots&gt;
+            &lt;ae:parameters&gt;
+                &lt;parameter name="template"&gt;%core.template_dir%/decorators/DefaultMaster&lt;/ae:parameter&gt;
+            &lt;/ae:parameters&gt;
+        &lt;/layer&gt;
+    &lt;/layers&gt;
+&lt;/layout&gt;
+
+&lt;layout name="another"&gt;
+    &lt;layers&gt;
+        &lt;!-- xinclude layer definitions from default layout (should use better xpath expression and 1.0 style namespaces...) --&gt;
+        &lt;xi:include xpointer="xmlns(agavi=http://agavi.org/agavi/1.0/config)
+                    xpointer(//agavi:output_type[@name='html']/agavi:layouts/agavi:layout[@name='default']/agavi:layers/*)" /&gt;
+    &lt;/layers&gt;
+&lt;/layout&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_18">How to re-use input templates to display errors?</dt>
+  <dd>Without knowing the specific requirements of your application it is usually a good practice to have a
+    setup of three views for your input form handling action: <strong>Success</strong>View,
+    <strong>Error</strong>View and <strong>Input</strong>View. You would appoint
+    each of those views depending on the state or the validation results.  "Input" is
+    used to display the empty form, "Error" is used in case any validation or other
+    errors occur and "Success" will be appointed after handling data successfully.
+    You may use the Agavi action wizard to create the necessary files for you:
+<pre>
+$ dev/bin/agavi action-wizard
+Module name: Posts
+Action name: Add
+Space-separated list of views to create for Add [Success]: Input Success Error
+</pre>
+    Your code (pseudo-style) could then look something like this:
+<pre class="sh_php">
+// in the input handling action (e.g. Default_AddFoobarAction):
+    public function executeWrite(AgaviRequestDataHolder $rd)
+    {
+        // ... some code ... update via models etc.
+        if ($errors_while_trying_to_do_something_useful)
+        {
+            return 'Error';
+        }
+        return 'Success';
+    }
+    
+    public function handleError() // could be handleWriteError or similar
+    {
+        // error handling like (p)re-populating the form
+        return 'Error';
+    }
+    
+    public function getDefaultViewName()
+    {
+        // by default show the input template
+        return 'Input';
+    }
+
+// in the input and success views:
+    public function executeHtml(AgaviRequestDataHolder $rd)
+    {
+        // set some attributes etc. for your template
+    }
+    
+// in the error view
+    public function executeHtml(AgaviRequestDataHolder $rd)
+    {
+        // re-use the input template for presenting the errors in the form  
+        $this-&gt;getLayer('content')-&gt;setTemplate('Input');
+    }
+</pre>
+    By re-using the input template in your error view you can avoid duplicating
+    code without sacrificing later maintainability. You shouldn't go for having
+    less and less files in these cases, as you'll notice later on, that you need
+    to add views and templates when you add other output types. Without proper
+    structuring you would need to write a lot of unmaintainable spaghetti code.
+    <div class="hint">
+    A common <a href="http://en.wikipedia.org/wiki/Code_smell" title="Go to Wikipedia entry about code smells...">code smell</a>
+    when using Agavi would be too large classes/methods for your actions and views.
+    It's pretty much time for refactoring when your files grow up to hundreds of lines.
+    Try to make better use of the built-in validators or write custom validators to
+    save on unnecessary validation logic in your actions. Use the <a href="#filter_0">FormPopulationFilter</a>
+    to pre- and re-populate your forms. Outsource code to different AgaviModel classes.
+    Strive to have lean actions/views/templates by hiding business logic in those (re-usable!)
+    model classes. Prevent duplicated code in templates and views by creating simple
+    'wizard like' actions to display given data. See the FAQ entries about
+    <a href="#general_16">slots</a> and <a href="#general_4">simple actions</a>
+    for further ideas.
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_19">How to load another master template?</dt>
+  <dd>Setting another master template is the same as setting a normal template
+    to use. Just use the apropriate layer (<code>decorator</code> in this case)
+    in the view:
+<pre class="sh_php">
+$this-&gt;getContext()-&gt;getLayer('decorator')-&gt;setTemplate(AgaviConfig::get('core.templates').'/some_other_master');
+</pre>
+    How to change layouts using <code>output_types.xml</code> is described under
+    <a href="#general_17" title="go to answer 17">How to load different layouts?</a>.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_20">What is the Agavi startup sequence?</dt>
+  <dd>Agavi starts something like that:
+  <ol>
+    <li>TranslationManager</li>
+    <li>User</li>
+    <li>Request (init)</li>
+    <li>Routing (init)</li>
+    <li>Request (startup)</li>
+    <li>Routing (startup)</li>
+    <li>Controller</li>
+  </ol>
+    For used classes and startup sequence e. g. see the <code>AgaviFactoryConfigHandler</code> source file. The shutdown
+    sequence is in reverse. So controller is shut down first, then request, routing, user, translation manager and storage.<br>
+    The startup sequence is important, as this means, that you are able to e.g. access the user in routing and
+    validation if you need it. Usually <code>$_GET etc.</code> are unset in <code>AgaviRequest::startup()</code> and/or
+    <code>AgaviWebRequest::startup()</code>, but with the above startup sequence you are able to register
+    <code>$_GET etc.</code> as a routing source in <code>init</code>. To disable certain functionalities of
+    Agavi just look at <code>settings.xml</code>:
+<pre class="sh_xml">
+&lt;setting name="use_database"&gt;true&lt;/setting&gt;
+&lt;setting name="use_logging"&gt;true&lt;/setting&gt;
+&lt;setting name="use_security"&gt;false&lt;/setting&gt;
+&lt;setting name="use_translation"&gt;true&lt;/setting&gt;
+</pre>
+    To change the implementing classes have a look at the <code>factories.xml</code> file. Please be careful, when you
+    enable or disable features in settings, as you won't be able to access certain features. For example the
+    <code>AgaviDateTimeValidator</code> needs the translation manager to work correctly.<br>
+    In case you want to disable the logging manager you should better get used to write your logging code like this:
+<pre class="sh_php">
+if (AgaviConfig::get('core.use_logging', false))
+{
+    // do your logging...
+}
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_21">What do I need to know about Agavi models and how to use them?</dt>
+  <dd>In patterns such as MVC, <em>data models</em> are widely used to deal with the "business logic" of an application. The way you do this, or even, what patterns to integrate is completely <b>up to you</b>. Nonetheless, Agavi <em>models</em> are extremely useful for a good number of reasons, so you'll probably want to use/extend them with your classes. The AgaviModel class creates a <em>bridge</em> between the business logic, and the rest of the application logic, by simply using Agavi </em>$context</em> internally.
+<pre class="sh_php">
+public function initialize(AgaviContext $context, array $parameters = array())
+{
+	$this->context = $context;
+}
+</pre>
+<p>Every time you initialize a model a $context parameter is passed, along with an array of custom params. This is the way to do it:</p>
+<pre class="sh_php">
+$this->getContext()->getModel('Model_Name', 'Module_Name', array('foo','bar'));
+</pre>
+<p>Models are loaded in the way shown above, and additionally, you can skip the second parameter ONLY if the model is not inside any module, but located at the main application's models/ folder (at the lowest level). Bare in mind not to use the word 'Model' when passing the first parameter. It's '<strong>FooBar</strong>', not '<strong>FooBarModel</strong>'.</p>
+<p>Here's a few extra things you need to know about Agavi models:</p>
+	<ul>
+		<li>Models are only loaded once.</li>
+		<li>Models do not need to be included in autoload.xml, as long as they are under the models folder ( app/models/ ).</li>
+		<li>Models implement __sleep and __wakeup methods, therefore they are easily transform into serialized objects for caching and other common uses.</li>
+		<li>When using getModel(), a model's constructor is called as well (if the model has one) which might lead into some confusion. So, if needed you may write both, a constructor and a initialize method. Only the later will have access to the context though.</li>
+	</ul>
+</dd>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_22">How to use custom configuration files?</dt>
+  <dd>There may always be situations where you need complex configuration settings for certain taks,
+    that you don't want to add to the default <code>settings.xml</code> file or include via PHP, YAML,
+    INI files or whatever other formats you like. Agavi gives you a very convenient way to use custom
+    configs and have them validated and cached for further requests like normal Agavi config files.
+    Just start by defining a new config handler in your app's <code>config_handlers.xml</code> file:
+<pre class="sh_xml">
+&lt;handler pattern="%core.config_dir%/project/foo/*.xml" class="AgaviReturnArrayConfigHandler" /&gt;
+</pre>
+    This line tells Agavi to use the built-in (yet <strong>deprecated</strong>) <code>AgaviReturnArrayConfigHandler</code> class
+    for all XML files to be found in the <code>app/config/project/foo/</code> directory.<br>
+    To use the cached config file in your actions, views, models or other classes do something like:
+<pre class="sh_php">
+$config = include AgaviConfigCache::checkConfig(AgaviConfig::get('path_to_one_of_the_xml_configfiles'));
+</pre>
+    The above defined handler parses the XML file and returns an associated array of all defined tags and values
+    for easy access. You may use the config like this:
+<pre class="sh_php">
+if (!isset($config['some']))
+{
+    throw new LogicException('element "some" missing!');
+}
+
+foreach ($config['some']['bar'] as $foo =&gt; $data)
+{
+    $this-&gt;doSomethingWithEach($foo, $data);
+}
+</pre>
+    The XML file for the above pseudo code could be like that:
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;some&gt;
+    &lt;baz&gt;asdf&lt;/baz&gt;
+    &lt;foo&gt;-1&lt;/foo&gt;
+    &lt;bar&gt;
+        &lt;some&gt;...more data and xml...&lt;/some&gt;
+        &lt;more&gt;...more data and xml...&lt;/more&gt;
+        &lt;deep&gt;...more data and xml...&lt;/deep&gt;
+        &lt;structs&gt;...more data and xml...&lt;/structs&gt;
+    &lt;/bar&gt;
+&lt;/some&gt;
+</pre>
+    To be able to write code without all the validational <code>isset()</code> etc. statements
+    you may validate your XML structure against a well defined XML schema definition (XSD) and
+    use your own custom config handlers. Create a schema file, define and create your
+    config handler class and add it to <code>autoload.xml</code>:
+<pre class="sh_php">
+class FooDefinitionConfigHandler extends AgaviXmlConfigHandler
+{
+    // have a look at AgaviXmlConfigHandler and AgaviIXmlConfigHandler
+    // and then
+    // implement necessary methods and validate your XML structure...
+}
+</pre>
+<pre class="sh_xml">
+&lt;handler pattern="%core.config_dir%/project/foo/*.foo.xml" class="FooDefinitionConfigHandler"&gt;
+    &lt;validation&gt;%core.config_dir%/xsd/foo_definition.xsd&lt;/validation/&gt;
+&lt;/handler&gt;
+</pre>
+    For examples of XSDs and custom config handler classes just have a look at the Agavi source code.
+    <em>In case you don't want to use Agavi's XML parser, you'll need to resolve parents, filter content
+        and order &lt;configuration&gt; blocks by contexts and environments all by yourself (see
+        <code>AgaviXmlConfigParser</code>).</em>
+    For further information and if you wonder what's possible, please head to the API docs or ask the devs.
+    To quote the configuration section of the <a href="http://svn.agavi.org/trunk/RELEASE_NOTES-1.0">Agavi 1.0
+    RELEASE_NOTES file</a> extensively:
+    <blockquote>
+<p>Agavi now supports any number of XML Schema (including XML Schema Instance declarations), RELAX NG
+or Schematron files to be validated against config files or merged result documents in several different
+stages, can apply XSL transformations (including those declared in <?xml-stylesheet?> PIs) and has
+extended namespaces support that allow backwards-compatibility to old config files in future versions.
+New-style configuration handlers extending AgaviXmlConfigHandler are now given a single AgaviXmlConfigDomDocument
+(extends DOMDocument) instance to work on, which already holds only the relevant &lt;configuration&gt; blocks
+in the correct order. Together with other subclasses of ext/dom classes, it provides several convenience methods
+to ease the processing of configuration files, but of course, all capabilities of DOM, including XPath,
+are usable inside configuration handlers.</p>
+    </blockquote>
+    <div class="hint">A more in-depth article making extensive use of the Agavi custom configuration handlers was written
+        by Luis Merino. See <a href="http://www.luismerino.name/delivering-static-files-helping-your-app-scal"
+        title="See blog article about custom configuration files in Agavi...">Delivering static files:
+        Helping your app scale using custom configs in Agavi Framework</a> for an introduction about his concept of
+        declaratively specifying which static files (e.g. javascript files or stylesheets) to include for matched routes
+        via a <code>StaticFilesConfigHandler</code>.
+    </div>
+
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="general_23">How to use Propel models with Agavi?</dt>
+  <dd>For a simple explanation on how to include <a href="http://www.propelorm.org/"
+  title="Homepage of PHP5 Propel Object-Relational Mapping (ORM) project">Propel</a> in your own projects see
+  <a href="http://blog.veikko.fi/post/82466126/installing-a-project-local-propel"
+  title="Veikko explains how to include Propel in an Agavi project by getting it via SVN...">this Blogpost</a>.
+  All you need is <a href="http://www.phing.info/trac/" title="Homepage of The Phing Project">Phing</a> which you
+  probably already have thanks to Agavi.<br />
+  In short: Just get Propel from GitHub as Tarball or via <code title="e.g. via: git clone https://github.com/propelorm/Propel.git propel">clone</code>
+  and put the <code title="Contains the classes required to run Propel in the command line">generator</code> files
+  into your <code>dev/libs/propel</code> folder while the <code title="Contains the classes required to access Propel models and the database.">runtime</code>
+  files may be put into your project's <code>app/lib/vendor/propel</code> directory. Use this distinction when you
+  don't need the generator files in production environments.<br />
+  After getting Propel run it in your project's directory via <code>dev/libs/propel/bin/propel-gen dev/db</code>. Generate
+  your runtime config files into the <code>dev/db</code> directory via <code title="dev/libs/propel/bin/propel-gen convert-conf">convert-conf</code>
+  command. Your classes will probably be in your <code>dev/db/build</code> directory. The important files in your <code>dev/db</code> folder
+  are <code>schema.xml</code>, <code>runtime-conf.xml</code> and <code>build.properties</code>. Configure your directories similar to this:
+<pre class="sh_ini">
+#relative to propel-gen script
+propel.output.dir = ../../..
+propel.php.dir = ${propel.output.dir}/app/lib/vendor/propel
+propel.phpconf.dir = ${propel.output.dir}/dev/db/config
+propel.sql.dir = ${propel.output.dir}/dev/db/sql
+</pre>
+  Configure your include path to include the Propel runtime and OM classes.
+<pre class="sh_php">
+  $path = '/your/project/libs' . PATH_SEPARATOR . '/your/project/app/lib/vendor/propel';
+  set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+</pre>
+  You may setup your Propel connection in your <code>app/lib/config/database.xml</code> file similar to this:
+<pre class="sh_xml">
+&lt;database name="propelom" class="AgaviPropelDatabase"&gt;
+    &lt;ae:parameter name="config"&gt;%core.app_dir%/config/your-project-conf.php&lt;/ae:parameter&gt;
+&lt;/database&gt;
+</pre>
+  You may generate the classmap and conf files to the wanted directory or just copy <code>classmap-your-project-conf.php</code> and
+  <code>your-project-conf.php</code> (from Propel's <code>dev/db/build/conf</code>) to Agavi's <code>app/config</code> directory. You
+  can of course <a href="#general_10" title="FAQ entry about defining custom database connection settings">define custom database connection overrides</a> when needed. 
+  <div class="hint">
+      Remember to configure your DB connections for all environments and that you have set <code>use_database</code> to
+      <code>true</code> in your <code>app/config/settings.xml</code>.
+  </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_24">How to change the template lookup patterns Agavi uses?</dt>
+  <dd>You can customize the default pattern Agavi uses to find templates in the filesystem by overriding the
+    <code>targets</code> parameter on a layer in <code>output_types.xml</code>. This enables your application to
+    have different templates and let Agavi choose the first one that matches the given targets. The following
+    snippet gives an example on how one could implement mobile templates that reuse existing actions and views by
+    letting Agavi first look for <code>Success.mobile.php</code> before trying to use <code>Success.mobile.php</code>.
+    That way you can have a mobile version of your website where it is not strictly necessary to duplicate all templates
+    for the mobile version as you can reuse the original templates. In case you want to adjust a template for mobile
+    devices you can just put a <code>*.mobile.php</code> file next to the existing normal one. The <code>{extension}</code>
+    placeholder is usually set via the <code>default_extension</code> parameter of the renderer used for the layer.
+<pre class="sh_xml">
+&lt;layer name="content"&gt;
+    &lt;parameters&gt;
+        &lt;parameter name="targets"&gt;                                                                                       
+            &lt;parameter&gt;${directory}/${template}.mobile${extension}&lt;/parameter&gt;
+            &lt;parameter&gt;${directory}/${template}${extension}&lt;/parameter&gt;
+        &lt;/parameter&gt;
+    &lt;/parameters&gt;
+&lt;/layer&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_25">How to use different renderers for different layers of output types?</dt>
+  <dd>You can set a different renderer for each of the layers you define in <code>output_types.xml</code> or set dynamically
+    within views:
+<pre class="sh_xml">
+&lt;layer name="user_generated_content" renderer="twig" /&gt;
+</pre>
+    The above feature enables you to define specific layouts with different layers where e.g. all layers are rendered via a
+    <code>AgaviPhpRenderer</code> while the layer that displays sensitive user provided content is rendered using a template
+    engine renderer of your choice that has features such as sandboxing or limited sets of capabilities. The given example
+    uses a renderer named <code>twig</code> (see <code>AgaviTwigRenderer</code> and the <a href="http://twig.sensiolabs.org/"
+    title="See the Twig homepage for usage examples and feature documentation...">Twig homepage</a> for more information) that
+    is usually defined for specific output types. With this knowledge you could do crazy things like XML or Javascript islands
+    within HTML all by defining according layers with appropriate custom renderers that handle escaping or whatever.<br />
+    The following example defines three renderers. Two of them are provided by Agavi itself while the third one is a custom renderer
+    that DracoBlue and me wrote as a small test to make transitioning an existing Agavi application from using PHP as its templating
+    engine to allowing the use of Twig templates where needed. For refactoring reasons this enables you to start using Twig in
+    templates one template at a time while the fallback will always be the PHP template variant.
+<pre class="sh_xml">
+&lt;output_type name="html"&gt;
+    &lt;renderers default="proxy"&gt;                                                                                                          
+        
+        &lt;renderer name="proxy" class="AgaviProxyRenderer"&gt;
+            &lt;ae:parameter name="renderers"&gt;
+                &lt;ae:parameter&gt;twig&lt;/ae:parameter&gt;
+                &lt;ae:parameter&gt;pphp&lt;/ae:parameter&gt;
+            &lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+            
+        &lt;renderer name="pphp" class="ProjectPhpRenderer"&gt;
+            &lt;ae:parameter name="assigns"&gt;
+                &lt;!-- default assigns of Agavi omitted --&gt;
+            &lt;/ae:parameter&gt;
+            &lt;ae:parameter name="default_extension"&gt;.php&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="var_name"&gt;t&lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+            
+        
+        &lt;renderer name="twig" class="AgaviTwigRenderer"&gt;
+            &lt;ae:parameter name="assigns"&gt;
+                &lt;-- default assigns of Agavi omitted --&gt;
+            &lt;/ae:parameter&gt;
+            &lt;ae:parameter name="default_extension"&gt;.twig&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="extract_vars"&gt;true&lt;/ae:parameter&gt;
+            &lt;ae:parameter name="options"&gt;
+                &lt;ae:parameter name="auto_escape"&gt;true&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="auto_reload"&gt;true&lt;/ae:parameter&gt;
+            &lt;/ae:parameter&gt;
+        &lt;/renderer&gt;
+    &lt;/renderers&gt;
+
+    &lt;layouts default="standard"&gt;
+        &lt;!-- standard layout with a content and a decorator layer --&gt;
+        &lt;layout name="standard"&gt;
+            &lt;layer name="content" /&gt;
+            &lt;layer name="decorator"&gt;
+                &lt;ae:parameter name="directory"&gt;%core.template_dir%/Html&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="template"&gt;HtmlMaster&lt;/ae:parameter&gt;
+            &lt;/layer&gt;
+        &lt;/layout&gt;
+    &lt;/layouts&gt;
+&lt;/output_type&gt;
+</pre>
+    You can find the <a href="https://gist.github.com/2594326" title="Gist of AgaviProxyRenderer class">AgaviProxyRenderer source
+    code on Github</a>. It was written and tested with Agavi v1.0.7. If you use the given example the normal Agavi behaviour on
+    template lookup patterns is still working. That way, if you use the <code>targets</code> parameter for layers given in
+    <a href="#general_24" title="Jump to answer about how to change template lookup patterns per layer">a previous answer</a>,
+    Agavi would try to lookup templates in this order:
+    <ul>
+        <li><code>*.mobile.twig</code></li>
+        <li><code>*.twig</code></li>
+        <li><code>*.mobile.php</code></li>
+        <li><code>*.php</code></li>
+    </ul>
+    This lookup behaviour does of course also work for the HtmlMaster template specified as a decorator. Please notice the options
+    given to the <code>AgaviTwigRenderer</code>. It sets automatic escaping of all extracted variables (set via <code>setAttribute()</code>
+    in views and enables automatic reloading of modified templates even when the <code>core.debug</code> setting of Agavi is set to false.
+    By default Agavi uses the Twig template caching mechanism when not run in debug mode. For details see the renderer and the Twig docs.
+    <div class="hint">
+        The normal Agavi lookup patterns for locale specific templates like <code>*.de_DE.php</code> or
+        <code>en/*.php</code> were omitted for brevity reasons in the above order listing.
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="general_99">Is it possible to change the directory structure of a module?</dt>
+  <dd>Short answer: Yes.<br>
+    Long answer: You can change the way actions, views, templates and related validation
+    and cache files are layed out per module in each module's <tt>module.xml</tt> file.
+    Try these settings as an example (taken from <a href="http://trac.agavi.org/ticket/668" title="Go to ticket #668 in Agavi trac">Agavi ticket  #668</a>):
+<pre class="sh_xml">
+&lt;setting name="agavi.action.path"&gt;%core.module_dir%/${moduleName}/impl/${actionName}/Action.class.php&lt;/setting&gt;
+&lt;setting name="agavi.cache.path"&gt;%core.module_dir%/${moduleName}/impl/${actionName}/cache.xml&lt;/setting&gt;
+&lt;setting name="agavi.template.directory"&gt;%core.module_dir%/${module}/impl/&lt;/setting&gt;
+&lt;setting name="agavi.validate.path"&gt;%core.module_dir%/${moduleName}/impl/${actionName}/validate.xml&lt;/setting&gt;
+&lt;setting name="agavi.view.path"&gt;%core.module_dir%/${moduleName}/impl/${viewName}View.class.php&lt;/setting&gt;
+&lt;setting name="agavi.view.name"&gt;${actionName}/${viewName}&lt;/setting&gt;
+</pre>
+    You can also put this into its own <code>&lt;settings&gt;</code> block and <code>xi:include</code> from elsewhere.
+    Using the above example settings you get the following directory structure: 
+<pre>
+app                     // application directory
+  modules               // contains all modules
+    Default             // module name
+      config            // contains module specific config files (e.g. module.xml, autoload.xml, config_handlers.xml, validators.xml)
+      impl              // implementation directory with all actions (and their related files)
+      lib               // should contain module specific base classes for views, actions, models or custom validators etc.
+      models            // module specific model classes
+</pre>
+    All actions, views, templates and cache/validation configs are inside the impl directory in the folder next
+    to each action. You can see fast, if a validation or caching file exists for that action and what views
+    and templates are available for it.
+    <br>
+    Note that the example (has to) customize the view name, so you now have a slash (sub directory)
+    in the view filename (and an underscore in the class name) between action name and view
+    shortname ('Success', 'Input' etc.)... Example: <code>Default_Sub_Marine_SuccessView</code> instead
+    of <code>Default_Sub_MarineSuccessView</code> (in directory <code>Default/Sub</code> are files like
+    <code>MarineAction.class.php</code> and <code>MarineSuccessView.class.php</code>).
+    <br>
+    Also note, that using the template lookup pattern where there is a directory per locale
+    does not make much sense with this layout. Keep in mind, that you need to set up the config
+    handlers in your application's or module's <code>config_handlers.xml</code>:
+<pre class="sh_xml">
+&lt;handlers&gt;
+    &lt;handler pattern="%core.module_dir%/*/impl/*/validate.xml" class="AgaviValidatorConfigHandler"&gt;
+        &lt;validation&gt;%core.agavi_dir%/config/xsd/validators.xsd&lt;/validation&gt;
+    &lt;/handler&gt;
+    &lt;handler pattern="%core.module_dir%/*/impl/*/cache.xml" class="AgaviCachingConfigHandler"&gt;
+        &lt;validation&gt;%core.agavi_dir%/config/xsd/caching.xsd&lt;/validation&gt;
+    &lt;/handler&gt;
+&lt;handlers&gt;
+</pre>
+    <br>
+    See <a href="http://trac.agavi.org/ticket/668" title="Go to ticket in Agavi trac">http://trac.agavi.org/ticket/668</a> or
+    the sample application for examples of the files.<br>
+    The given new layout is nice to have all files related to an action in one directory,
+    but leads to all the same names all over the place. So having multiple files open in
+    your favorite IDE (<a href="http://www.netbeans.org/features/php/index.html"
+    title="Go to Netbeans PHP features page...">Netbeans, anyone?</a>) makes it harder
+    to distinguish files and their according action. As always everything depends on
+    your preferences and requirements. :-)
+    <div class="hint">
+    The Agavi build system up to 1.0 doesn't support these custom filesystem layouts. Versions later
+    than Agavi 1.0.1 support the mentioned layout, but default to using the old layout. When running
+    the action wizard from command line you'll have the choice for each module to use the new format.
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+</dl>
+
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+
+<h2 id="routing-answers">Routing related topics</h2>
+<dl>
+  <dt id="routing_0">What do I have to know about Agavi's routing system?</dt>
+  <dd>For an instant start just have a look at the sample application's <code>app/config/routing.xml</code>
+    file. There are multiple nice things to learn about how to define and nest routes and
+    what additional parameters might prove to be helpful.<br>
+    The most important thing to remember is, that you have to validate all parameters
+    (including those from routes) to be able to use them in your actions and views
+    (at least in the <a href="#validation_0" title="Go to validation modes description entry...">default
+    strict validation mode</a>).
+<pre class="sh_xml">
+&lt;!-- matches "/de" or "/en" at the beginning of the URL and uses either value to set the locale,
+     with British Pounds Sterling as the currency. Execution will not stop if this route matches.
+     If it matches, the matched fragment will be stripped from the input URL for the following routes.
+     This route has the "imply" flag, which means that it will be included in generated routes even
+     if the gen() call does not explicitly mention it. The matched "language" parameter will not be
+     available as a request parameter in the code, because it's "ignore"d --&gt;
+&lt;route pattern="^/({locale:[a-z]{2}(_[A-Z]{2})?})" stop="false" imply="true" cut="true" locale="${locale}@currency=GBP"&gt;
+    &lt;callbacks&gt;
+        &lt;callback class="AgaviSampleAppLanguageRoutingCallback" /&gt;
+    &lt;/callbacks&gt;
+    &lt;ignores&gt;
+        &lt;ignore&gt;locale&lt;/ignore&gt;
+    &lt;/ignores&gt;
+&lt;/route&gt;
+        
+&lt;!-- If the HTTP Accept: header contains "application/json" (i.e. if you do an XMLHTTPRequest with one of the usual JS frameworks),
+     set the output type to "json". Look at output_types.xml for the declaration of that output type. Execution will not stop if
+     this route matches. This is nice for making XMLHTTPRequest calls. --&gt;
+&lt;route pattern="application/json" source="_SERVER[HTTP_ACCEPT]" output_type="json" stop="false" /&gt;
+
+&lt;route pattern="^/auth" module="%actions.login_module%"&gt;
+    &lt;routes&gt;
+        &lt;route name="login" pattern="^/login$" action="%actions.login_action%" /&gt;
+        &lt;!-- A nested route. This will match the URL "/login/logout" - matched fragments from
+                the parent route are stripped from the URL string for child routs. --&gt;
+        &lt;route name="logout" pattern="^/logout$" action="Logout" /&gt;
+    &lt;/routes&gt;
+&lt;/route&gt;
+</pre>
+    This example is taken from the <a href="http://trac.agavi.org/browser/tags/1.0.3/samples/app/config/routing.xml"
+    title="Go to routing.xml file of Agavi's sample app...">sample application's routing.xml</a>.
+    The <code>pattern</code> parameters of the login and logout routes have a trailing <code>$</code>.
+    Without them URLs like <code>/auth/login/foo/bar</code> could match later on, which is
+    most probably not your desired behaviour.<br>
+    The above example code tells you multiple things about Agavi's routing system. You define routes via patterns
+    of regular expressions that are matched against the current request (or command line in console context or
+    given parameters in xml-rpc context etc.). You should <code>name</code> routes, to be able to generate
+    them in templates or views with <code>$url = $ro-&gt;gen('route.name', $params, $options);</code>. In case
+    a nested route's name starts with a dot (".name") you have to specify <code>route.name</code> for
+    route generation. If your nested route is just a normal name you can use it for <code>gen()</code> calls directly.<br>
+    Another feature is setting the output type to use depending on some pattern matching (with using not only the
+    current URL as <code>source</code>, but <code>_SERVER</code> values etc. as well). In the above example URLs that
+    are requested via XHR (using one of the common Javascript libraries out there, that set the correct accept headers
+    for such calls) would use the <code>executeJson()</code> method in the matched action's view (instead of the probably
+    default <code>executeHtml()</code> you normally use in your web application).
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_1">How to define default values for routing parameters?</dt>
+  <dd>Required <code>page</code> parameter with default value <code>start</code>:
+<pre class="sh_xml">
+&lt;route name="page.products" pattern="^/(page:[A-Za-z0-9_\-]+)/products" module="Products"&gt;
+    &lt;defaults&gt;
+        &lt;default for="page"&gt;start&lt;/default&gt;
+    &lt;/defaults&gt;
+    &lt;route name=".detail" pattern="^/({id:\d+})$" action="Products" /&gt;
+&lt;/route&gt;
+</pre>
+    Optional <code>page</code> parameter with default value <code>start</code>:
+<pre class="sh_xml">
+&lt;route name="page.products" pattern="^(/{page:[[:alnum:]]+})?/products" module="Products"&gt;
+    &lt;defaults&gt;
+        &lt;default for="page"&gt;/{start}&lt;/default&gt;
+    &lt;/defaults&gt;
+    &lt;route name=".detail" pattern="^/({id:\d+})$" action="Products" /&gt;
+&lt;/route&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_2">How to use those curly braces for min/max quantifiers?</dt>
+  <dd>You will do fine by just escaping them like this:
+<pre class="sh_xml">
+&lt;route name="hash" pattern="/(hash:[a-fA-F\d]\{32\})$"&gt;
+&lt;!-- or try it like this: --&gt;
+&lt;route name="hash" pattern="/({hash:[a-fA-F\d]{32}})$"&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_3">How to make route pattern matching case-insensitive?</dt>
+  <dd>When matching URL patterns within your route's <code>pattern</code> attribute you can use
+    the known regular expression <a href="http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php" title="Go to PHP PCRE pattern modifier description...">pattern modifiers</a>.
+    As Agavi depends on <a href="http://www.php.net/pcre" title="Go to PHP PCRE documentation..."><abbr title="Perl Compatible Regular Expressions">PCRE</abbr></a>
+    you can just use the <code>/i</code> modifier to make matching case insensitive (or any other modifier to try other things):
+<pre class="sh_xml">
+&lt;route name="asdf_and_foo_case_insensitive" pattern="... ((?i)asdf|foo) ..."&gt;
+&lt;!-- to only make a part of the pattern case insensitive just use braces: --&gt;
+&lt;route name="asdf_case_insensitive" pattern="... (((?i)asdf)|foo) ..."&gt;
+</pre>
+    If you want the complete matching to be case insensitive, use <code>(?i)</code>
+    at the beginning of the pattern. <strong>Please be aware of duplicate content issues when using
+    case-insensitive URLs or optional trailing slashes etc. Read your favorite <abbr title="Search Engine Optimization">SEO</abbr>-related
+    articles/blogs to get some more information about this.</strong> 
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_4">What additional options are there to be specified when generating routes?</dt>
+  <dd>There are some options available, that make your life easier, when generating routes via <code>$ro-&gt;gen()</code>.
+    See the following examples:
+<pre class="sh_php">
+// just as a reminder, a complete URL may consist of these parts:
+// scheme://[authority[:password]@](host_name|\[host_address\])[:port][/hierarchical/path/to/resource[?search_string][#fragment_id]]
+
+// default call for route generation:
+$ro-&gt;gen('some.sub.route', $routeParams, $optionsArray);
+
+// default routing generation options from <a href="http://trac.agavi.org/browser/tags/1.0.3/src/routing/AgaviWebRouting.class.php#L58" title="Go to AgaviWebRouting class in Agavi's trac...">AgaviWebRouting</a>:
+$this-&gt;defaultGenOptions = array_merge($this-&gt;defaultGenOptions, array(
+    // separator, typically &amp;amp; for HTML, & otherwise
+    'separator' =&gt; '&amp;amp;',
+    // whether or not to append the SID if necessary
+    'use_trans_sid' =&gt; false,
+    // scheme, or true to include, or false to block
+    'scheme' =&gt; null,
+    // authority, or true to include, or false to block
+    'authority' =&gt; null,
+    // host, or true to include, or false to block
+    'host' =&gt; null,
+    // port, or true to include, or false to block
+    'port' =&gt; null,
+    // fragment identifier (#foo)
+    'fragment' =&gt; null,
+));
+
+// there are other options like:
+
+// tell Agavi to generate absolute (or relative) URLs:
+$ro-&gt;gen('some.sub.route', $routeParams, array('relative' =&gt; false));
+
+// tell Agavi to use the current URL with parameters (e.g. re-submit a form to the same URL):
+$ro-&gt;gen(null);
+</pre>
+    You may combine the available options as you like.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+  
+
+  <dt id="routing_5">How to determine the current matched routes?</dt>
+  <dd>As the executed main action/view may create/modify/remove slots dynamically you can
+    find the matched routes in the request (not in the execution container):
+<pre class="sh_php">
+// get array with all matched routes of the current request
+$route_names_array = $this-&gt;getContext()-&gt;getRequest()-&gt;getAttribute('matched_routes', 'org.agavi.routing');
+
+// you'll get an array that looks something like this with as many routes as matched:
+array('product.edit' ...);
+
+// which you can use to get an information array from it:
+$route = $this-&gt;getContext()-&gt;getRouting()-&gt;getRoute($route_name_from_array);
+
+// and determine the executed module and action from that:
+$module = $route['opt']['module'];
+$action = $route['opt']['action'];
+</pre>
+    The above example with some further explanations can be found in <a href="http://dracoblue.net/dev/detect-actionviewmodule-and-matched-route-in-agavi/131/"
+    title="go to blog entry about matched routes...">DracoBlue's blog entry about matched routes</a>.
+    In case you wonder, why multiple routes may have matched, think about changing the output type
+    using a route, cutting locale parameters from routes or setting up things via routing callbacks
+    (see the <a href="#routing_0" title="Some extract from the sample app's routing with some minor explanations...">first
+    routing related FAQ entry</a> for examples).
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_6">What are routing callbacks and how can I use them?</dt>
+  <dd>Routing callbacks are something really useful. They are defined inside routes themselves, and by applying them you can perform things like extract, modify or write new parameters for the routes, redirections, and host of other things on execution time, all by just making use of its runtime events.
+<pre class="sh_xml">
+&lt;route pattern=&quot;^/({locale:[a-z]{2}})&quot; stop=&quot;false&quot; imply=&quot;true&quot; cut=&quot;true&quot;&gt;
+	&lt;callbacks&gt;
+		&lt;callback class=&quot;LanguageRoutingCallback&quot; /&gt;
+	&lt;/callbacks&gt;
+	&lt;ignores&gt;
+		&lt;ignore&gt;locale&lt;/ignore&gt;
+	&lt;/ignores&gt;
+&lt;/route&gt;
+</pre>
+<p>There are three events you could use for all purposes: onMatched, onNotMatched, onGenerate. To create a new routing callback extend the class <a href="http://www.agavi.org/apidocs/agavi/routing/AgaviRoutingCallback.html" rel="external">AgaviRoutingCallback</a> and make use of those. The most exceptional thing to realize about them is that parameters, options, and user parameters are passed by reference, so any update in them will affect the route execution or generation. This is perfect since you could use it to your advantage.</p>
+	</dd>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="routing_7">How do I generate routes with different output types?</dt>
+  <dd>
+    Just add the route name of the output type changing route to your normal route
+    generation call like this:
+<pre class="sh_php">
+// e.g. in view/template when linking to resources
+$ro-&gt;gen('music.genre+rss', ...); // link to rss feed of genres
+$ro-&gt;gen('music.genre', ...);     // link to HTML listing of genres
+</pre>
+    The first route generates a link to your normale URL with the added extension
+    <code>".rss"</code> as you specified in your <code>routing.xml</code> file. You
+    may add various other output types to your setup and will be able to support
+    multiple types of data depending on the called route. To use this, follow the
+    next steps.
+    <br><br>
+    Let's say, you defined an output type for RSS or Atom feeds in your <code>output_types.xml</code> file:
+<pre class="sh_xml">
+&lt;output_type name="rss"&gt;
+    &lt;renderers default="php"&gt;
+        &lt;renderer name="php" class="AgaviPhpRenderer"&gt;
+        &lt;/renderer&gt;
+    &lt;/renderers&gt;
+    &lt;parameters&gt;
+        &lt;parameter name="http_headers"&gt;
+            &lt;parameter name="Content-Type"&gt;application/rss+xml; charset=UTF-8&lt;/parameter&gt;
+        &lt;/parameter&gt;
+    &lt;/parameters&gt;
+&lt;/output_type&gt;
+</pre>
+    You then define the routes you need to use and generate feeds in <code>routing.xml</code>:
+<pre class="sh_xml">
+&lt;route name="rss" pattern=".rss$" stop="false" cut="true" output_type="rss" /&gt;
+...
+&lt;route name="music" pattern="^/music"&gt;
+  &lt;route name=".genre" pattern="^/genre/(name:[\S\s]+)$"&gt;
+  &lt;/route&gt;
+&lt;/route&gt;
+</pre>
+    The <code>cut="true"</code> attribute tells Agavi to cut ".rss" from the route and continue
+    with matching the routes as <code>stop="false"</code>.<br />
+    Then in your views you have the different <code>execute*()</code> methods for each
+    output type to generate your music genre listing (in this example):
+<pre class="sh_php">
+public function executeRss(AgaviRequestDataHolder $rd)
+{
+    // generate your feed using whatever you like (SimpleXML, XMLWriter, some external library ...)
+    return $xml_output_for_feed;
+}
+</pre>
+    You may add the appropriate execute methods as fallback to your base views to prevent Agavi
+    exceptions when somebody calls an URL with <code>".rss"</code> that has no specified
+    <code>executeRss()</code> method (and forward/redirect to a 404 page or the HTML
+    output or whatever fits your needs).<br><br>
+    As a practice try adding a CSV, XML or JSON routes and return your data comma separated, as XML or JSON.<br>
+<pre class="sh_xml">
+&lt;route name="output_json" pattern="JSON" source="_SERVER[HTTP_X_REQUEST]" output_type="json" stop="false" /&gt;
+&lt;!-- or --&gt;
+&lt;route name="output_ajax" pattern="XMLHttpRequest" source="_SERVER[HTTP_X_REQUESTED_WITH]" output_type="ajax" stop="false" /&gt;
+</pre>
+    Use whatever you think is appropriate - the different Javascript libraries or frameworks usually set the
+    correct request headers for you to use in pattern matching for your routes. So using this scheme a
+    single URL may return HTML or JSON depending on the request headers sent. Awesome! :-)
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+</dl> <!-- routing -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+<h2 id="validation-answers">Validation related topics</h2>
+
+<p>
+    <a href="http://xkcd.com/327/" title="Go to XKCD comic #327..."><img src="http://imgs.xkcd.com/comics/exploits_of_a_mom.png" alt="Just a reminder to validate ALL user inputs..."></a>
+</p>
+
+<dl>
+  <dt id="validation_0">What are the validation modes and what do I need to know about them?</dt>
+  <dd>There are three modes, which you can set in <code>factories.xml</code> (if you want to relax
+    things a bit, which is not advised):
+<pre class="sh_xml">
+&lt;validation_manager class="AgaviValidationManager"&gt;
+    &lt;ae:parameter name="mode"&gt;strict|conditional|relaxed&lt;/ae:parameter&gt;
+&lt;/validation_manager&gt;
+</pre>
+    The "strict" mode is the default and recommended mode as it is the most secure one.
+    It requires you to validate ALL inputs. This includes not only form inputs, but also
+    route parameters, headers, files and cookies.
+    <ul>
+      <li><strong>strict</strong> => only validated input (get, post, cookies, headers, files etc.) is passed to the action/view</li>
+      <li><strong>conditional</strong> => if there is a validation XML for the action "strict" rules, otherwise all data is passed</li>
+      <li><strong>relaxed</strong> => all data is passed (except if explicit validation failed)</li>
+    </ul>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="validation_1">Is it possible to define nested validators?</dt>
+  <dd>Of course, have you ever used the <code>AgaviAndoperatorValidator</code> or <code>AgaviXoroperatorValidator</code> in a nested szenario? ;)
+    For a simple start try some validator chaining like this:
+<pre class="sh_xml">
+&lt;validators method="write"&gt;
+    &lt;validator class="and" name="email_rules"&gt;
+        &lt;validator class="string" name="email_too_short" trim="true"&gt; ... &lt;/validator&gt;
+        &lt;validator class="email" name="email_valid"&gt; ... &lt;/validator&gt;
+        ...some more if you like...
+    &lt;/validator&gt;
+&lt;/validators&gt;
+</pre>
+    With the <code>AgaviAndoperatorValidator</code> you can bundle multiple validators (and hence their errors)
+    into one. If the first validator fails, the execution stops there (= 1 error message)
+    but all validators are still required to pass validation.
+    
+    Veikko provides another example, that is probably helpful in certain cases:
+<pre class="sh_xml">
+&lt;validator class="or"&gt;
+    &lt;validators&gt;
+
+        &lt;validator class="email" required="false" &gt;
+            &lt;arguments&gt;
+                &lt;argument&gt;email&lt;/argument&gt;
+            &lt;/arguments&gt;
+        &lt;/validator&gt;
+
+        &lt;validator class="MyPhoneNumberValidator" required="false" &gt;
+            &lt;arguments&gt;
+                &lt;argument&gt;phone&lt;/argument&gt;
+            &lt;/arguments&gt;
+        &lt;/validator&gt;
+
+    &lt;/validators&gt;
+
+    &lt;errors&gt;
+        &lt;error&gt;Please provide email or phone&lt;/error&gt;
+    &lt;/errors&gt;
+&lt;/validator&gt;
+</pre>
+    The <code>MyPhoneNumberValidator</code> is a custom validator. With Agavi you
+    can write your own custom validators to perform certain tasks on your input data
+    before action execution. See <a href="#validation_17" title="How to create a custom validator...">How
+    to create a custom Validator?</a> to learn, how easy it is.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_2">What is the name of a validator for?</dt>
+  <dd>Names of validators are optional and mainly for grabbing results more easily.
+    See <a href="#validation_14" title="Go to question/answer about how to get validation results...">
+    "How do I check validation results..."</a> for an example.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_3">How to prevent performing other validations on a field in case one validator fails?</dt>
+  <dd>Use the "severity" attribute like this:
+<pre class="sh_xml">
+&lt;validator ... severity="critical"&gt;
+</pre>
+    The base class <code>AgaviValidator</code> defines multiple error severity constants
+    in case of failure. They are <code>INFO</code>, <code>SILENT</code>, <code>NOTICE</code>,
+    <code>ERROR</code> and <code>CRITICAL</code>. For further details just have a look
+    at the source code and its comments.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_4">Can validators depend on other validators?</dt>
+  <dd>Yes, you can make a validator run only if an other validator succeeds.
+    Example:
+<pre class="sh_xml">
+&lt;validator ... provides="password_valid"&gt;
+&lt;validator ... depends="password_valid"&gt;
+</pre>
+    <a href="http://blog.veikko.fi/" title="Go to blog of Veikko Mäkinen">Veikko</a> provides another nice example for this:
+<pre class="sh_xml">
+&lt;validator ... required="false" provides="street_set"&gt;
+    &lt;arguments base="contact"&gt;
+        &lt;argument&gt;Street&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/validator&gt;
+
+&lt;validator ... required="true" depends="contact[street_set]"&gt;
+    &lt;arguments base="contact"&gt;
+        &lt;argument&gt;Zip&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/validator&gt;
+</pre>
+<blockquote cite="http://blog.veikko.fi/post/68983308/agavi-tip-validation-gotchas" title="Agavi Validation Gotchas, Veikko Mäkinen">
+  <p><strong>Note:</strong> argument&#8217;s <code>base</code> attribute affects
+   also provides/depends attributes (see example above)<strong>!</strong></p>
+</blockquote>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_5">Can the "depends" attribute receive more than one dependency?</dt>
+  <dd>Yes, just use a space separated list. Every dependency must be met to make the validator run.
+    Example:
+<pre class="sh_xml">
+&lt;validator class="string" provides="password_required"&gt;
+    &lt;argument&gt;password&lt;/argument&gt;
+    &lt;error&gt;Password is required&lt;/error&gt;
+&lt;/validator&gt;
+
+&lt;validator class="string" provides="confirm_required"&gt;
+    &lt;argument&gt;password_confirmation&lt;/argument&gt;
+    &lt;error&gt;Password confirmation is required&lt;/error&gt;
+&lt;/validator&gt;
+
+&lt;validator class="equals" depends="password_required confirm_required"&gt;
+    &lt;argument&gt;password_confirmation&lt;/argument&gt;
+    &lt;ae:parameter name="value"&gt;password&lt;/ae:parameter&gt;
+    &lt;ae:parameter name="asparam"&gt;true&lt;/ae:parameter&gt;
+    &lt;error&gt;Password confirmation doesn't match Password&lt;/error&gt;
+&lt;/validator&gt;
+</pre>
+    In this simple case the password match validator is only run if both previous string validators succeed.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_6">Is there a possibility to register validators manually in an action?</dt>
+  <dd>You can register validators manually in the action's <code>register[Write|Read|etc]Validators()</code> methods:
+<pre class="sh_php">
+$validators = array();
+
+$arguments = array('date');
+$errors = array('' =&gt; 'something went wrong');
+$parameters = array('export' =&gt; 'somedate', 'required' =&gt; true);
+$validator = new SomeSpecialDateValidator();
+$validator-&gt;initialize($this-&gt;getContext(), $parameters, $arguments, $errors);
+$validators[] = $validator;
+
+$this-&gt;getContainer()-&gt;getValidationManager()-&gt;registerValidators($validators);
+</pre>
+    For convenience you may use the <code>createValidator()</code> method to create validators like this (pseudocode; not tested):
+<pre class="sh_php">
+$validationManager-&gt;createValidator('Some_CaptchaValidator', 
+                        array(0  =&gt; 'captcha_comment'),
+                        array('' =&gt; 'You entered a wrong validation code.'), 
+                        array('type'                  =&gt; 'integer',
+                              'severity'              =&gt; 'error',
+                              'method'                =&gt; null,
+                              'required'              =&gt; true,
+                              'translation_domain'    =&gt; 'default.captcha', 
+                              'name'                  =&gt; 'invalid_captcha',
+                              'domain'                =&gt; $captcha_domain
+                        )
+                    );
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_7">Is there any example of custom file validations or the <code>AgaviImageFileValidator</code>?</dt>
+  <dd>Try something like this:
+<pre class="sh_xml">
+&lt;validator class="AgaviImageFileValidator" severity="error" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;image&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Provided image invalid.&lt;/error&gt;
+        &lt;error for="max_width"&gt;Please only use images with a maximum width of 500px.&lt;/error&gt;
+        &lt;error for="min_width"&gt;Your provided image should have a minimum width of at least 10px.&lt;/error&gt;
+        &lt;error for="max_size"&gt;Maximum allowed filesize is 50kb.&lt;/error&gt;
+        &lt;error for="format"&gt;Only JPEG, GIF and PNG images will be accepted.&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="max_width"&gt;500&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="min_width"&gt;10&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="max_size"&gt;51200&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="format"&gt;
+            &lt;ae:parameter&gt;jpeg&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;gif&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;png&lt;/ae:parameter&gt;
+        &lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+
+&lt;validator class="AgaviFileValidator" severity="error" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;css&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Invalid file. Use non-empty files with a '.css' extension.&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="min_size"&gt;0&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="extension"&gt;css&lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+    Please make sure, that you have proper security constraints when working with user
+    provided content/files. There are many possible attack vectors and you should
+    NEVER trust any uploaded content or your determined MIME types or extensions.
+    Guessing the file types is not sufficient on its own as there could be other
+    content hidden inside. Just google GIFARs (e.g. see <a href="http://xs-sniper.com/blog/2008/12/17/sun-fixes-gifars/" title="Go to Billy (BK) Rios blog entry about GIFARs">Billy (BK) Rios' blog</a>), JPGARs or other
+    MIME type and file upload security related topics for a start.
+    For enhanced security you could perhaps deliver uploaded content using a second web server
+    instance, which does only have read only access for very specific directories
+    (where you move uploaded files to) and will not execute scripts.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_8">How can I repopulate read-only/disabled input fields?</dt>
+  <dd>Since disabled input fields will not be submitted (read-only inputs will be submitted -
+    see <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.12">HTML4.01 forms section</a>)
+    by the user agent, you could use the action's <code>handleError()</code>
+    method to provide a value if the parameter is not present in the request.<br>
+    Example:
+<pre class="sh_php">
+public function handleError(AgaviRequestDataHolder $rd) {
+    if (!$rd-&gt;hasParameter('readonly_or_disabled_field')) {
+        $this-&gt;context-&gt;getRequest()-&gt;setAttribute('populate',
+            new AgaviParameterHolder($rd-&gt;getParameters() + array('readonly_or_disabled_field' =&gt; 'default value')),
+            'org.agavi.filter.FormPopulationFilter');
+    }
+    return 'Input';
+}
+</pre>
+    This will work most of the time, but you will notice missing values in some cases as <code>$rd</code>
+    does not contain all global parameters to repopulate. If you notice this try to repopulate everything
+    using <code>true</code> and then set your value manually.<br>
+    <br>
+    Here are some more examples:
+<pre class="sh_php">
+// repopulate your form in the ErrorView (with the already posted data):
+$this-&gt;getContext()-&gt;getRequest()-&gt;setAttribute('populate', true, 'org.agavi.filter.FormPopulationFilter');
+
+// pre-fill form with some values:
+$data = array("name_of_input_field" =&gt; "some_value"); 
+$this-&gt;getContext()-&gt;getRequest()-&gt;setAttribute('populate', $data, 'org.agavi.filter.FormPopulationFilter'); 
+
+// or pre-fill it like this:
+$data = new AgaviRequestDataHolder(); 
+$data-&gt;setParameter('name_of_input_field', 'some_value'); 
+$this-&gt;getContext()-&gt;getRequest()-&gt;setAttribute('populate', $data, 'org.agavi.filter.FormPopulationFilter');
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_9">How to manually output error messages in a view?</dt>
+  <dd>Just use the validation manager and iterate over errors. For a small example of
+    iterating over error messages see the <a href="http://www.agavi.org/documentation/tutorial/validation.html"
+    title="Go to tutorial page">validation section of the tutorial</a>. Remember,
+    that you can probably <strong>use the <a href="#filter-answers" title="Go to the filter related answers of this FAQ..."><code>FormPopulationFilter</code></a>
+    to repopulate form fields and set necessary CSS error classes etc.</strong>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="validation_10">Is there a better way than using <code>isSet</code> or <code>isNotEmpty</code> to validate route parameters?</dt>
+  <dd>Unfortunately there is no better way than using <code>AgaviIssetValidator</code> and
+    <code>AgaviIsNotEmptyValidator</code>, as you have to validate all parameters in strict mode.
+    The difference of "set" vs. "empty" is as follows:<br>
+    Anything that has a value (even null) is considered "set". By default "empty" is the same as "set", but
+    for <code>AgaviWebRequestDataHolder</code> parameters are considered empty even when they're an empty string,
+    because browsers submit an empty string for empty form fields. (Otherwise <code>required="false"</code> on
+    validators for optional fields would require a somewhat cumbersome implementation)
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_11">How do I use the <code>inArray</code> validator?</dt>
+  <dd>Try something like this:
+<pre class="sh_xml">
+&lt;validator class="inarray" name="invalid_day" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;day&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error for="type"&gt;Only some values are allowed as a day.&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="type"&gt;string&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="case"&gt;true&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="values"&gt;
+            &lt;ae:parameter&gt;monday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;tuesday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;wednesday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;thursday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;friday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;saturday&lt;/ae:parameter&gt;
+            &lt;ae:parameter&gt;sunday&lt;/ae:parameter&gt;
+        &lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+    If you don't like the <code>values</code> parameter array specification, you may use a
+    custom <code>separator</code> and put all values in one line:
+<pre class="sh_xml">
+&lt;validator class="inarray" name="invalid_day" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;day&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error for="type"&gt;Only some values are allowed as a day.&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="type"&gt;string&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="case"&gt;true&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="values"&gt;monday,tuesday,wednesday,thursday,friday,saturday,sunday&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="sep"&gt;,&lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+    The <code>'case'</code> parameter is false by default and specifies if the comparison
+    should be case-sensitive or not (<code>true</code> = case-sensitive comparison). 
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_12">How do I validate array input?</dt>
+  <dd>Imagine you are in a situation where you tried the <code>AgaviInarrayValidator</code> from the
+    answer above to validate a form with multiple submit buttons. Each button element has the same
+    <code>name</code> attribute <code>day</code> and a <code>value</code> attribute set to <code>monday</code>,
+    <code>tuesday</code> etc. Everything works as expected, your daynames are matching a route with a
+    pattern like <code>^/(day:(monday|tuesday|etc...))$</code> and your validator just works. At least
+    until you check your multiple submit button scenario in Internet Exploder. The IE displays your
+    nicely CSS formatted buttons (like <code>&lt;button type="submit" name="day" value="sunday"&gt;some HTML&lt;/button&gt;</code>),
+    but does submit the inner content instead of the value attribute values (as any other browser
+    out there sticking to standards does). So what now? Javascript not allowed, one form per button not possible, other
+    alternatives fading fast...Easy. Breathe, just change your validators a bit to
+    validate array input and use the names of the submit buttons to get your information to the server:
+<pre class="sh_xml">
+&lt;button type="submit" name="day[sunday]" value="whatever"&gt;some HTML&lt;/button&gt;
+
+&lt;validator class="string" name="invalid_day" required="false"&gt;
+    &lt;arguments base="day[]"&gt;
+        &lt;argument&gt;&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/validator&gt;
+</pre>
+    Other examples for the validation of arrays are like this (thanks to Veikko once again :P):
+<pre class="sh_xml">
+&lt;input name="rows[id]" ...&gt;
+
+&lt;arguments base="rows"&gt;
+    &lt;argument&gt;id&lt;/argument&gt;
+&lt;/arguments&gt;
+
+&lt;!-- or --&gt;
+
+&lt;arguments&gt;
+    &lt;argument&gt;rows[id]&lt;/argument&gt;
+&lt;/arguments&gt;
+</pre>
+    or:
+<pre class="sh_xml">
+&lt;input name="rows[1][id]" ...&gt;
+
+&lt;arguments base="rows[]"&gt;
+    &lt;argument&gt;id&lt;/argument&gt;
+&lt;/arguments&gt;
+</pre>
+    or:
+<pre class="sh_xml">
+&lt;input name="rows[]" ...&gt;
+
+&lt;arguments base="rows[]"&gt;
+    &lt;argument/&gt;
+&lt;/arguments&gt;
+</pre>
+    Note the usage of the <code>base</code> attribute in certain places. In addition to this there's
+    a new <a href="http://trac.agavi.org/browser/tags/1.0.3/src/validator/AgaviArraylengthValidator.class.php"
+    title="Go to class definition in Agavi trac..."><code>AgaviArraylengthValidator</code></a>
+    since Agavi v1.0, which lets you specify <code>min</code> and <code>max</code> parameters
+    to validate the number of elements in an array.
+	 
+    Furthermore, if you would like to overwrite an input array with results from a validator, you can
+    do so by specifying an export parameter as follows:
+<pre class="sh_xml">
+&lt;arguments base="rows[]"&gt;
+    &lt;argument/&gt;
+&lt;/arguments&gt;
+&lt;ae:parameters&gt;
+    &lt;ae:parameter name="export"&gt;rows[%2$s]&lt;/ae:parameter&gt;
+&lt;/ae:parameters&gt;
+</pre> 
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_13">Is there an example for the <code>AgaviDateTimeValidator</code>?</dt>
+  <dd>The <code>AgaviDateTimeValidator</code> is a versatile tool. It can not only validate several
+    date and time formats, but may also convert those values to a format that suits you in your actions/views
+    (like unix timestamp, a formatted date etc.). The following is a small example, on how to
+    cast your input date into another format:
+<pre class="sh_xml">
+&lt;validator method="write" class="datetime" required="true" name="invalid_birthday" translation_domain="registration.errors"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;birthday&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="formats"&gt;dd.MM.yyyy&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="export"&gt;casted_birthday&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="cast_to"&gt;
+            &lt;ae:parameters&gt;
+                &lt;ae:parameter name="type"&gt;date&lt;/ae:parameter&gt;
+                &lt;ae:parameter name="format"&gt;yyyy-MM-dd&lt;/ae:parameter&gt;
+            &lt;/ae:parameters&gt;
+        &lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Invalid date format.&lt;/error&gt;
+    &lt;/errors&gt;
+&lt;/validator&gt;
+</pre>
+    Notice the <code>cast_to</code> parameter and the parameters given to it. You can find further
+    explanations and other possible parameters in the <a href="http://trac.agavi.org/browser/tags/1.0.3/src/validator/AgaviDateTimeValidator.class.php"
+    title="Go to AgaviDateTimeValidator in Agavi's trac...">AgaviDateTimeValidator</a>
+    class. Another thing to notice is the <code>translation_domain</code> attribute, which allows
+    for easy translation of validation error messages.<br><br>
+    Veikko provides <a href="http://blog.veikko.fi/post/68983308/agavi-tip-validation-gotchas"
+    title="Go to 'Agavi validation gotchas' blog post...">another example</a> on how to use the validator
+    to create a timestamp as a compound of three input arguments:
+<pre class="sh_xml">
+&lt;validator class="AgaviDateTimeValidator"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="AgaviDateDefinitions::DATE"&gt;day&lt;/argument&gt;
+        &lt;argument name="AgaviDateDefinitions::MONTH"&gt;month&lt;/argument&gt;
+        &lt;argument name="AgaviDateDefinitions::YEAR"&gt;year&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Validation error&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="export"&gt;MyDatestamp&lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+    The <code>AgaviDateTimeValidator</code> supports the <a href="http://www.php.net/strtotime"
+    title="Go to PHP documentation of strtotime method..."><code>strtotime</code> syntax</a>
+    (see <a href="http://trac.agavi.org/ticket/1018" title="Go to ticket 1018 of Agavi's issue tracker...">ticket #1018</a>).
+    Therefore it's possible to do something like this:
+<pre class="sh_xml">
+&lt;!-- beware of +1 month as imho it's always 30 days... --&gt;
+&lt;ae:parameter name="min"&gt;+1 week&lt;/ae:parameter&gt;
+&lt;ae:parameter name="max"&gt;-18 years&lt;/ae:parameter&gt;
+
+&lt;!-- according to the ticket you can even use timezones: --&gt;
+&lt;ae:parameter name="min"&gt;last monday this month 08:00UTC&lt;/ae:parameter&gt;
+</pre>
+    See the <a href="http://dracoblue.net/dev/agavi-age-validator/123/"
+    title="Go to blog entry...">custom AgeValidator of DracoBlue</a> which could
+    have used the default date validator (but chose not to because of error messages).
+    <div class="hint">
+    Please note, that you need to have <code>use_translation</code> set to <code>true</code> in <code>settings.xml</code> for this validator and its translations to work.
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_14">How do I check validation results and retrieve the incidents of a failed validator?</dt>
+  <dd>There's a brand new validation report query API you should check out. By chaining some
+    <code>by()</code> method calls you can get information about errors and incidents of your validated arguments.
+    <a href="http://trac.agavi.org/ticket/1022" title="Go to query API ticket in Agavi's trac...">Ticket #1022</a>
+    contains examples:
+<pre class="sh_php">
+$report = $this-&gt;getContainer()-&gt;getValidationManager()-&gt;getReport();
+// or: $report = $this-&gt;getContainer()-&gt;getValidationManager()-&gt;getReport()-&gt;createQuery();
+
+// check for a valid name
+$nameValid = !$report-&gt;byArgument('name')-&gt;has();
+
+// every by() method returns a clone of the query object, so you don't have to create new instances
+$nameMissing = $report-&gt;byArgument('name')-&gt;byErrorName('required')-&gt;has();
+
+// check for optional image file
+$myoptionalfileIsImage = $report-&gt;byArgument(new AgaviValidationArgument('myoptionalfile', AgaviWebRequestDataHolder::SOURCE_FILES))
+                                -&gt;byValidator('is_image')
+                                -&gt;getResult() === AgaviValidator::SUCCESS;
+</pre>
+    The "old" way (but still functioning, I'd guess) would be to use named validators,
+    checking the incidents of the validators in question and then dealing with them accordingly:
+<pre class="sh_php">
+public function handleError(AgaviRequestDataHolder $rd)
+{
+  $vm = $this-&gt;getContainer()-&gt;getValidationManager();
+  if (count($vm-&gt;getReport()-&gt;getValidatorResult('my_special_validator')-&gt;getIncidents())) {
+    return 'CriticalError';
+  }
+  else {
+    return 'Error';
+  }
+}
+</pre>
+    Above example taken from <a href="http://blog.veikko.fi/post/68773061/agavi-tip-checking-validation-results" title="Go to blog of Veikko Mäkinen">http://blog.veikko.fi/</a>.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="validation_15">How to handle checkbox input fields?</dt>
+  <dd>As checkboxes are not submitted when not checked you can either use seemingly
+    hackish approaches like Ruby on Rails does (adding a hidden text input field
+    element with the same name and value "0" for each checkbox) or try to make some
+    use of Agavi's built-in validators. The first and easiest way would be the usage
+    of the <code>AgaviEqualsValidator</code> with the default value parameter
+    of the <code>Agavi(*)Request::getParameter()</code> method:
+<pre class="sh_xml">
+&lt;validator class="equals" required="false"&gt;
+    &lt;argument&gt;user_disabled&lt;/argument&gt;
+    &lt;ae:parameter name="value"&gt;1&lt;/ae:parameter&gt;
+&lt;/validator&gt;
+</pre>
+and then in action/view:
+<pre class="sh_php">
+$rd-&gt;getParameter('user_disabled', 0); // default value = 0 when checkbox is not submitted
+</pre>
+    Presuming you don't want to rely on the default behaviour of checkbox input fields,
+    there is a slightly different solution that makes use of a combination of validators
+    to always have a checkbox value after validation (by setting the missing value to the default):
+<pre class="sh_xml">
+&lt;validator class="or" required="true"&gt;
+ 
+    &lt;validator class="number" required="false"&gt;
+        &lt;argument&gt;user_disabled&lt;/argument&gt;
+    &lt;/validator&gt;
+
+    &lt;validator class="set" required="false"&gt;
+        &lt;ae:parameter name="export"&gt;user_disabled&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="value"&gt;0&lt;/ae:parameter&gt;
+    &lt;/validator&gt;
+ 
+&lt;/validator&gt;
+</pre>
+    With this validator your checkbox field will always be defined and transmitted and
+    all internal methods will work as expected on 'normal' input fields. Which solution
+    you choose depends once again on your preferences and if it is useful to
+    not have an unchecked checkbox input field submitted (so <code>$rq-&gt;hasParameter()</code>
+    method behaves differently).
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="validation_16">I'm writing the same configuration code over and over again, which doesn't feel very DRY. How to solve this?</dt>
+  <dd>If you don't always want to repeat yourself in various configuration files all
+    over the place, try making some use of the niceties XML offers you. In validation
+    files you should really make use of the <code>parent="..."</code> attribute. The value
+    allows you to specify a parent validation file to include. Agavi needs this to let
+    you use those shortnames for built-in validators instead of fully qualified class names.  
+<pre class="sh_xml">
+&lt;!-- in specific action's validator reference the module's validator --&gt;
+parent="%core.module_dir%/Programs/config/validators.xml"
+
+&lt;!-- in the module's validator file reference the application specific validator file --&gt;
+parent="%core.config_dir%/validators.xml"
+</pre>
+    The application's validator file then references Agavi's default validation file as parent. Proceeding
+    from this it's probably clear, that you can define validators in those various places to
+    prevent repeating yourself.<br>
+    Another way to save some keystrokes and store some information in central places is to
+    use XIncludes. You could easily put some complex code snippet in its own XML file
+    and then include this snippet everywhere you need it. An example could be a complex
+    application's caching definition:
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/caching/1.0"
+                   xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+    &lt;ae:configuration&gt;
+        &lt;cachings&gt;
+            &lt;caching lifetime="30 seconds" enabled="true"&gt;
+                &lt;groups&gt;
+                    &lt;group&gt;some_group_name_to_use_for_this_action&lt;/group&gt;
+                    &lt;group source="request_data"&gt;some_parameter&lt;/group&gt;
+                    &lt;group source="request_attribute"&gt;or_attribute&lt;/group&gt;
+                &lt;/groups&gt;
+                &lt;views&gt;
+                    &lt;view&gt;Success&lt;/view&gt;
+                &lt;/views&gt;
+                &lt;!-- include default output type 'html' caching (template variables and request attributes
+                     necessary to cache javascript and styles correctly and show a complete page etc. --&gt;
+                &lt;xi:include href="%core.config_dir%/cache_default.xml"
+                            xpointer="xmlns(ae=http://agavi.org/agavi/config/global/envelope/1.0)
+                                      xmlns(ac=http://agavi.org/agavi/config/parts/caching/1.0)
+                                      xpointer(/ae:configurations/ae:configuration/ac:cachings/ac:caching/*)"
+                /&gt;
+            &lt;/caching&gt;
+        &lt;/cachings&gt;
+    &lt;/ae:configuration&gt;
+&lt;/ae:configurations&gt; 
+</pre>
+    The included snippet resides in <code>app/config/cache_default.xml</code> (or whatever fits your requirements)
+    and could look like this (depends on your application, your used slots, global request attributes they need
+    to function when being fragment cached etc.):
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/caching/1.0"&gt;
+    &lt;ae:configuration&gt;
+        &lt;!-- this file contains default settings to be used via xincludes in
+             caching xml files throughout the application - be careful with
+             changes to this file as multiple cache.xml files are affected --&gt;
+        &lt;cachings&gt;
+            &lt;caching&gt;
+                &lt;output_types&gt;
+                    &lt;output_type name="html"&gt;
+                        &lt;layer name="content" /&gt;
+                        &lt;template_variable&gt;_content_type&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_robots&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_meta_tags&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_title&lt;/template_variable&gt;
+                        &lt;template_variable&gt;theme&lt;/template_variable&gt;
+                        &lt;request_attributes&gt;
+                            &lt;request_attribute namespace="app.layout"&gt;javascript_files&lt;/request_attribute&gt;
+                            &lt;request_attribute namespace="app.layout"&gt;stylesheets&lt;/request_attribute&gt;
+                            &lt;request_attribute namespace="www.example.com"&gt;some_pageid&lt;/request_attribute&gt;
+                        &lt;/request_attributes&gt;
+                    &lt;/output_type&gt;
+                &lt;/output_types&gt;
+            &lt;/caching&gt;
+        &lt;/cachings&gt;
+    &lt;/ae:configuration&gt;
+&lt;/ae:configurations&gt;
+</pre>
+    Request attributes are set in your cached views and defined here explicitly to have them
+    available, when fragment cached versions of your actions/views are displayed. Without this,
+    the attributes wouldn't be available. Praise the XInclude for centralized storage, management,
+    retrieval and reuse of snippets.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+
+
+  <dt id="validation_17">How to write a custom validator?</dt>
+  <dd>Writing a custom validator in Agavi is rather easy. Just extend <code>AgaviValidator</code> or
+    one of its siblings and add a <code>validate()</code> method to it. Using parameters you can
+    customize the behaviour of your validator. In case validation fails you simple throw errors
+    and these error names may then be used for (translated) error messages in the validation XML file.
+<pre class="sh_php">
+class SampleCustomValidator extends AgaviValidator
+{
+    protected function validate()
+    {
+        // if(!parent::validate()) // in case you extend another validator
+        // {
+        //     return false;
+        // }
+
+        // get input data (e.g. from input field)
+        $inputdata = $this-&gt;getData($this-&gt;getArgument());
+        
+        // when required="false" is set on the validator
+        // we usually can't set a default value for the following
+        // actions - thus we override checkAllArgumentsSet() to return
+        // true and return our default value in case of no input data
+        if (empty($inputdata))
+        {
+            $this-&gt;export(array());
+        }
+
+        if (!$this-&gt;hasParameter('something'))
+        {
+            $this-&gt;throwError();
+            return false;
+        }
+        
+        if ($some_constraint !== $this-&gt;getParameter('some_param', $default_value))
+        {
+            $this-&gt;throwError('one_problem');
+            if ($even_more_problems_arise)
+            {
+                $this-&gt;throwError('two_problems');
+            }
+            return false;
+        }
+        
+        // check for consistency, ask your Agavi models for help, do whatever
+        // you like to validate your input data - e.g. like this:
+        $finder = $this-&gt;getContext()-&gt;getModel('BlogPostFinder');
+        $post = $finder-&gt;findById($inputdata);
+        if (null === $post)
+        {
+            $this-&gt;throwError('not_found');
+            return false;
+        }
+        
+        // export your validated data (e.g. the $post object so your actions don't need to retrieve it again)
+        // you may optionally specify a name here as 2nd parameter (or set one using the ae:parameter 'export')
+        $this-&gt;export($post);
+        return true;
+    }
+
+    // you only need to override this method, when you want to export default values
+    // to your actions in case no input was given (that is, when 'required' is set to 'false')
+    protected function checkAllArgumentsSet($throwError = true)
+    {
+        return true; // look at AgaviValidator::checkAllArgumentsSet()
+    }
+}
+</pre>
+    After creating your own custom validator you have to add the class to <code>autoload.xml</code>
+    and may start using it in your validation definitions like this:
+<pre class="sh_xml">
+&lt;validator class="SampleCustomValidator" name="valid_post" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;foo&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Strange things happened.&lt;/error&gt;
+        &lt;error for="not_found"&gt;Blog post not found. Specify valid ID.&lt;/error&gt;
+        &lt;error for="one_problem"&gt;"Some people, when confronted with a problem, think &gt;I know, I'll use regular expressions.&lt;.&lt;/error&gt;
+        &lt;error for="two_problems"&gt;Now they have two problems" -- Jamie Zawinski.&lt;/error&gt;
+    &lt;/errors&gt;
+    &lt;ae:parameters&gt;
+        &lt;ae:parameter name="something"&gt;true&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="some_param"&gt;value&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="export"&gt;bar&lt;/ae:parameter&gt;
+    &lt;/ae:parameters&gt;
+&lt;/validator&gt;
+</pre>
+    Everything should be rather obvious when reading this code. The <code>export</code> parameter is optional
+    and specifies the name under which to export your data to the request (so <code>foo</code> will
+    be available to your actions as <code>bar</code>).<br>
+    <div class="hint">
+    Please note, that you only need to overwrite <a href="http://trac.agavi.org/browser/tags/1.0.3/src/validator/AgaviValidator.class.php#L396"
+    title="Go to method declaration of checkAllArgumentsSet..."><code>AgaviValidator::checkAllArgumentsSet()</code></a>
+    when you want to export default values to your actions when <code>required="false"</code>.
+    Keep in mind, that <code>required="false"</code> just prevents the validator
+    from running when the argument the validator checks is not available. 
+    </div>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="validation_18">How to register shortnames for validators and why should I use them?</dt>
+  <dd>Just follow the chain of <code>parent</code> validators until you find <a href="http://trac.agavi.org/browser/tags/1.0.3/src/config/defaults/validators.xml"
+  title="See default Agavi validator definitions"><code>agavi/src/config/defaults/validators.xml</code></a>. Within
+  the chain you may always define short names everywhere. Examples are validator definitions specific to a module
+  or sets that are used project wide. You may create validator definitions and set sensible default parameters
+  for your own custom validators. Just add the following in a <code>[validators].xml</code> file:
+<pre class="sh_xml">
+&lt;validator_definition name="sample" class="SampleCustomValidator"&gt;
+    &lt;ae:parameter name="something"&gt;true&lt;/ae:parameter&gt;
+&lt;/validator_definition&gt;
+</pre>
+    The best about this mechanism isn't that you save on typing some classnames in your validator definitions. The
+    convenient thing is, that you may not only reuse validators (built-in or custom), but also reuse existing
+    validators with different sets of pre-defined parameters. Another advantage is, that you may easily change your
+    validator implementation later on without changing the lot of action validators you may have already in use
+    in your project. Just a cheap example to give you an example:<br><br>
+    Let's assume you start your project with a simple validator for min-length checks on given usernames:
+<pre class="sh_xml">
+&lt;validator_definition name="valid_username" class="AgaviStringValidator"&gt;
+    &lt;!-- ... etc. ... --&gt;
+    &lt;ae:parameter name="min"&gt;5&lt;/ae:parameter&gt;
+&lt;/validator_definition&gt;
+</pre>
+    Later on you extend that example by using the RegExp validator to check for valid characters and patterns:
+<pre class="sh_xml">
+&lt;validator_definition name="valid_username" class="AgaviRegexValidator"&gt;
+    &lt;!-- ... etc. ... --&gt;
+    &lt;ae:parameter name="pattern"&gt;[a-zA-Z_\-]{5,25}&lt;/ae:parameter&gt;
+&lt;/validator_definition&gt;
+</pre>
+    As your project grows you now want to check for the availability of usernames upon registration and
+    export valid <code>User</code> objects instead of just strings (unique names) to your actions. You create your own
+    custom validator for this, do all your checks on the given arguments and export the <code>User</code> object to
+    the request:
+<pre class="sh_xml">
+&lt;validator_definition name="valid_username" class="CustomUsernameValidator"&gt;
+    &lt;!-- ... etc. ... --&gt;
+    &lt;ae:parameter name="check_availability"&gt;false&lt;/ae:parameter&gt;
+&lt;/validator_definition&gt;
+
+&lt;validator_definition name="valid_available_username" class="CustomUsernameValidator"&gt;
+    &lt;ae:parameter name="check_availability"&gt;true&lt;/ae:parameter&gt;
+&lt;/validator_definition&gt;
+</pre>
+    The above example reuses the <code>CustomUsernameValidator</code> with different parameter settings.
+    To use your defined validators simply write validators for your actions and use the specified shortnames as <code>class</code> name like this:
+<pre class="sh_xml">
+&lt;validator class="valid_available_username" name="some_valid_and_available_username" required="false"&gt;
+    &lt;arguments&gt;
+        &lt;argument&gt;username&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;errors&gt;
+        &lt;error&gt;Username neither valid nor available.&lt;/error&gt;
+    &lt;/errors&gt;
+&lt;/validator&gt;
+</pre>
+    As you can see, the system is easily extendable and you're able to easily change certain validations in one place
+    instead of various files in all your different actions or modules. The maintainance is eased and error prone
+    changes of parameters everywhere in your project are no longer one of your concerns as you may simply add another
+    shortname or change settings for the existant ones.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+<!--
+  <dt id="validation_19">asdf</dt>
+  <dd>
+<pre class="sh_php">
+</pre>
+<pre class="sh_xml">
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+-->
+
+</dl> <!-- validation -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+<h2 id="caching-answers">Caching related topics</h2>
+<dl>
+  <dt id="caching_0">Is it possible to (globally) enable or disable fragment caching?</dt>
+  <dd>You can enable or disable the caching of fragments (using the <code>app/[ModuleName]/cache/[ActionName].xml</code> files)
+    individually per environment. Just edit the <code>factories.xml</code> file and set the
+    <code>enable_caching</code> parameter on the <code>AgaviExecutionFilter</code> accordingly:
+<pre class="sh_xml">
+&lt;ae:configuration context="web" environment="development.*"&gt;
+    &lt;execution_filter class="AgaviExecutionFilter"&gt;
+        &lt;ae:parameters&gt;
+            &lt;ae:parameter name="enable_caching"&gt;false&lt;/ae:parameter&gt;
+        &lt;/ae:parameters&gt;
+    &lt;/execution_filter&gt;
+&lt;/ae:configuration&gt;
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="caching_1">What are caching groups and how are they used for fragment caching?</dt>
+  <dd>You simply create a caching XML file with the actions' name in the <code>cache</code>
+    directory (or one of its subdirectories in case you have a deeper folder structure for actions/slots)
+    of your module and set some groups as keys to differentiate. Keys can be taken from different
+    sources (request parameters, current locale, etc.). The groups are used to build a directory
+    structure (folder names are base64 encoded) used for caching (see <code>app/cache/content/</code> directory)
+    fragments of your output.<br>
+    The following is a bit bigger, to give you an impression of the possibilities of Agavi's
+    fragment caching:
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/caching/1.0"&gt;
+    &lt;ae:configuration&gt;
+        &lt;cachings&gt;
+            &lt;caching lifetime="30 seconds" enabled="true"&gt;
+                &lt;groups&gt;
+                    &lt;group&gt;show_article_detail&lt;/group&gt;
+                    &lt;group source="user_attribute" namespace="tld.example.sub"&gt;userId&lt;/group&gt;
+                    &lt;group source="request_data"&gt;item[id]&lt;/group&gt;
+                    &lt;group source="global_request_data"&gt;article_id&lt;/group&gt;
+                    &lt;group source="global_request_data" namespace="cookies"&gt;someLocaleCookie&lt;/group&gt;
+                    &lt;group source="callback"&gt;getCustomCachingKeyFromActionMethod&lt;/group&gt;
+                    &lt;group source="locale" /&gt;
+                &lt;/groups&gt;
+                &lt;views&gt;
+                    &lt;view&gt;Success&lt;/view&gt;
+                &lt;/views&gt;
+                &lt;output_types&gt;
+                    &lt;output_type name="html"&gt;
+                        &lt;layer name="content" /&gt;
+                        &lt;template_variable&gt;_content_type&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_robots&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_meta_tags&lt;/template_variable&gt;
+                        &lt;template_variable&gt;_title&lt;/template_variable&gt;
+                        &lt;request_attributes&gt;
+                            &lt;request_attribute namespace="app.layout"&gt;javascript_files&lt;/request_attribute&gt;
+                            &lt;request_attribute namespace="app.layout"&gt;stylesheets&lt;/request_attribute&gt;
+                        &lt;/request_attributes&gt;
+                    &lt;/output_type&gt;
+                &lt;/output_types&gt;
+            &lt;/caching&gt;
+        &lt;/cachings&gt;
+    &lt;/ae:configuration&gt;
+    &lt;ae:configuration environment="production"&gt;
+        &lt;cachings&gt;
+            &lt;caching method="read" lifetime="24 hours" enabled="true"&gt;
+                    &lt;group source="callback"&gt;tryAnotherCustomCachingKeyFromActionMethod&lt;/group&gt;
+            &lt;/caching&gt;
+        &lt;/cachings&gt;
+    &lt;/ae:configuration&gt;
+    &lt;ae:configuration environment="staging"&gt;
+        &lt;cachings&gt;
+            &lt;caching method="read write" lifetime="30 seconds" enabled="false"&gt;
+                &lt;groups&gt;
+                    &lt;group&gt;show_article_detail&lt;/group&gt;
+                    &lt;group source="user_attribute" namespace="tld.example.sub"&gt;userId&lt;/group&gt;
+                    &lt;group source="request_data"&gt;someObjectInRequest&lt;/group&gt;
+                &lt;/groups&gt;
+            &lt;/caching&gt;
+        &lt;/cachings&gt;
+    &lt;/ae:configuration&gt;
+&lt;/ae:configurations&gt;
+</pre>
+    As you see, you can use different sources for your caching keys (groups) and
+    define different settings for different environments. It is also possible to
+    create custom (more complex) group keys by using a caching callback method of
+    your action, which returns the caching key to use. In case the action method
+    throws an <code>AgaviUncacheableException</code> nothing is cached.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="caching_2">Which <code>source</code> attribute values are available and what do they do?</dt>
+  <dd>You can find the acceptable values for the <code>source</code> attribute in the
+    <code><a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviExecutionFilter.class.php#L253"
+       title="Go to Agavi 1.0.0 source code of AgaviExecutionFilter class...">AgaviExecutionFilter</a></code>.
+     <dl>
+         <dt>string</dt>
+         <dd>The default source used. Takes just the given value as a group. Uses
+            <code>'0'</code> if string value is <code>null</code>, <code>false</code> or <code>empty</code>.</dd>
+            
+         <dt>callback</dt>
+         <dd>Name of callback method to call on current action. Return value of the
+            method will be used as caching key. If the method throws an <code>AgaviUncacheableException</code>
+            nothing will be cached.</dd>
+            
+         <dt>configuration_directive (Agavi 1.0.1+)</dt>
+         <dd>Uses <code>AgaviConfig::get()</code> to let you use configuration settings. Use
+            something like <code>core.debug</code> or <code>modules.modulname.Some</code> as element content.</dd>
+         
+         <dt>constant</dt>
+         <dd>Creates a constant of the given value and uses that as a caching group.</dd>
+
+         <dt>container_parameter</dt>
+         <dd>Retrieves a parameter from the current <code>AgaviExecutionContainer</code> (not its request!) to be used as a group.</dd>
+         
+         <dt>global_request_data</dt>
+         <dd>The element's value should be a name of a parameter from the global request.
+            If no <code>namespace</code> attribute is specified, the default is <code>AgaviRequestDataHolder::SOURCE_PARAMETERS</code>,
+            which maps to normal request parameters. You can specify <code>headers</code>,
+            <code>files</code> and <code>cookies</code> as <code>namespace</code>
+            attribute values to use other sources as group names.</dd>
+            
+         <dt>locale</dt>
+         <dd>Retrieves the current locale identifier from the <code>AgaviTranslationManager</code> and uses it as a group name.</dd>
+         
+         <dt>request_attribute</dt>
+         <dd>Uses the current context's request attribute as a group name. You may
+            specify the <code>namespace</code> attribute to get attributes from the
+            request, that are stored using a namespace.</dd>
+            
+         <dt class="legacy">request_parameter</dt>
+         <dd>Legacy value. You can use it, but it's the same as <code>source="global_request_data"</code>
+            without a <code>namespace</code> attribute.</dd>
+            
+         <dt>request_data</dt>
+         <dd>The same as <code>global_request_data</code>, but gets its parameters from
+            the current execution container's request instead of the global request. A <code>namespace</code>
+            attribute may be specified as well.</dd>
+            
+         <dt>user_attribute</dt>
+         <dd>Gets the specified attribute's value from the current context's user instance.
+            You may specify a <code>namespace</code> attribute to use for the attribute value lookup.</dd>
+            
+         <dt>user_authenticated</dt>
+         <dd>Uses <code>isAuthenticated()</code> method's return value if the current context's user is
+            an instance of <code>AgaviISecurityUser</code>.</dd>
+            
+         <dt>user_credential</dt>
+         <dd>Uses <code>hasCredentials()</code> method's return value if the current context's user is
+            an instance of <code>AgaviISecurityUser</code>.</dd>
+            
+         <dt>user_parameter</dt>
+         <dd>Gets the specified parameter's value from the current context's user instance.</dd>
+     </dl>
+     Remember, that if the returned value from the request etc. is an <code>object</code> Agavi
+     first tries to use the object's <code>__toString()</code> method or secondly looks,
+     if a <code>spl_object_hash</code> method exists to get a nice key for the group name.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="caching_3">Any tips before starting to use fragment caching intensively?</dt>
+  <dd>Starting to use fragment caching on a larger scale in production environments/applications may
+    result in some minor or not easily reproducible problems. The following few hints are there for you
+    to consider, when some strange bugs are reported to you or if you just want to prevent some gotchas
+    right from the beginning. Hopefully they spare you some minutes of testing when somewhat weird errors
+    occur after you've enabled fragment caching:
+    <ul>
+        <li>The values of your cache groups are base64 encoded and are used as file/folder names. Therefore
+            they may easily exceed the maximum filename/folder/path length constraints of your server's filesystem.
+            See <a href="http://trac.agavi.org/ticket/1140" title="Go to Agavi trac ticket #1140">Ticket #1140</a>
+            and the linked <a href="http://trac.agavi.org/ticket/854" title="Go to Agavi trac ticket #854">ticket #854</a>
+            for a solution on how to mitigate these problems. The recommended solution is to use
+            caching callbacks to bundle multiple of your caching groups together or if that seems
+            overkill just remember to use not too many caching groups and not too long caching group values
+            (try to hash them, if you don't need to reuse/revert folder names).
+        </li>
+        <li>Use the current environment's name as the first caching group to prevent problems
+            with other environments that may be run in parallel (e.g. an environment <em>production-desk</em>
+            that the editorial team of a website uses whileas normal visitors use <em>production</em>)
+            <small>(Note: This is just an example where the environment used by the editors could
+            show inplace editing buttons and stuff to make it easier for them to change certain aspects
+            of the pages of a website in a WYSIWYG style instead of using a backend CMS or similar).</small><br>
+            As fragment caching is environment agnostic by default, these two environments
+            would share the fragment cache (usually in <code>app/cache/content</code>) and may overwrite
+            parts of each other which may result in wrongly generated routes/texts etc. (first user hitting a
+            page in one environment would prime the cache and the user of the other environment would see
+            this cached file instead of his environment's version). To prevent those problems you could
+            use the environment's name from Agavi's settings as a caching group in your caching definition files:<br>
+            <pre class="sh_xml">
+&lt;group source="configuration_directive"&gt;core.environment&lt;/group&gt;
+            </pre>
+            In case you have many default groups you could define a default cache group file or sandbox
+            and XInclude everything you need. See the <a href="#validation_16" title="I'm writing the same configuration code over and over again, which doesn't feel very DRY. How to solve this?">validation question
+            about DRY</a> for some example that enables you to quickstart.
+        </li>
+        <li>There may be problems with your fragment cache, when you forget to take the <code>is_slot</code> parameter
+            into account and use the same action as a slot and a full page. As a workaround use <code>is_slot</code>
+            somewhere in your caching groups or callbacks.</li>
+        <li>Another problem with fragment caching related to slots is output type dependent. It may happen,
+            that you cache a slot for an AJAX/JSON output type with the same caching groups as the main
+            action/view/template. As this is definitly not what you want (return HTML to JSON or PDF to HTML
+            etc. pp.), you should take the output type into account when you use fragment caching of
+            actions/slots with multiple output types.
+        </li>
+        <li>Don't forget to cache (global) request attributes, as these attribute's values would otherwise
+            be missing in the cached version of pages. This may happen to you, when you set attributes to
+            the global request in your (main) actions, views or generated slots to use these values later
+            on in some decorator slots (think of tracking values in attributes that are used to create
+            tracking URLs in a decorator/layout slot (like footer slot or master template)).
+        </li>
+        <li>Remember to use Agavi's methods to clear entire caching groups. As Agavi doesn't clean up the
+            content cache by itself (which is good for never changing content) you may consider to setup
+            some maintainance routines (e.g. cronjobs), that clear the Agavi content cache for you depending
+            on your app's requirements (e.g. delete all the files and directories older than 30 days). A
+            simple cronjob approach could look like this (just ask your next server admin):
+            <pre class="sh_sh">
+17 03 * * *     find /srv/www/dir/of/your/app/cache/content -xdev -type f -mmin +1800 -print0 | xargs -r0 rm -v > /dev/null
+            </pre>
+        </li>
+    </ul>
+    A good help is to start using caching groups that have a combination of the name of the current
+    module, action, view, is_slot parameter and output type. This should prevent you from most
+    of the hidden aspects/gotchas of fragment caching that may hit you hard in production.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="caching_4">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="caching_5">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+</dl> <!-- caching -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+<h2 id="translation-answers">Translation related topics</h2>
+<dl>
+  <dt id="translation_0">How do I start?</dt>
+  <dd>For a quickstart just see the sample application. The following example is basically
+    taken from it. You start with defining translations by editing <code>app/config/translation.xml</code>
+    and using the <code>AgaviTranslationManager</code> in your code:
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/translation/1.0"&gt;
+    &lt;ae:configuration&gt;
+        
+        &lt;available_locales default_locale="en_US@currency=GBP"&gt;
+            &lt;!-- German, Germany --&gt;
+            &lt;available_locale identifier="de_DE"&gt;
+                &lt;ae:parameter name="description"&gt;Deutsch&lt;/ae:parameter&gt;
+            &lt;/available_locale&gt;
+            &lt;!-- English, United States --&gt;
+            &lt;available_locale identifier="en_US"&gt;
+                &lt;ae:parameter name="description"&gt;English&lt;/ae:parameter&gt;
+            &lt;/available_locale&gt;
+            &lt;!-- Chinese Simplified, China (alias for zh_Hans_CN, Simplified Han) --&gt;
+            &lt;available_locale identifier="zh_CN"&gt;
+                &lt;ae:parameter name="description"&gt;简体中文&lt;/ae:parameter&gt;
+            &lt;/available_locale&gt;
+            &lt;!-- Chinese Traditional, Taiwan (alias for zh_Hant_TW, Traditional Han) --&gt;
+            &lt;available_locale identifier="zh_TW"&gt;
+                &lt;ae:parameter name="description"&gt;繁體中文&lt;/ae:parameter&gt;
+            &lt;/available_locale&gt;
+        &lt;/available_locales&gt;
+        
+        &lt;translators default_domain="default"&gt;
+            &lt;translator domain="default"&gt;
+                
+                &lt;translator domain="errors"&gt;
+                    &lt;message_translator class="AgaviSimpleTranslator"&gt;
+                        &lt;ae:parameter name="Login"&gt;
+                            &lt;ae:parameter name="de"&gt;
+                                &lt;ae:parameter name="Wrong Password"&gt;Falsches Passwort&lt;/ae:parameter&gt;
+                                &lt;ae:parameter name="Wrong Username"&gt;Ungültiger Benutzername&lt;/ae:parameter&gt;
+                                &lt;ae:parameter name="Please supply a password."&gt;Bitte geben Sie ein Kennwort ein.&lt;/ae:parameter&gt;
+                                &lt;ae:parameter name="Username's too short (5 chars min)."&gt;Benutzername zu kurz (fünf Zeichen Minimum).&lt;/ae:parameter&gt;
+                            &lt;/ae:parameter&gt;
+                        &lt;/ae:parameter&gt;
+                    &lt;/message_translator&gt;
+                &lt;/translator&gt;
+                
+                &lt;message_translator class="AgaviGettextTranslator"&gt;
+                    &lt;ae:parameter name="text_domains"&gt;
+                        &lt;ae:parameter name="menu"&gt;%core.app_dir%/data/i18n&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="layout"&gt;%core.app_dir%/data/i18n&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="Login"&gt;%core.app_dir%/data/i18n&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="SearchEngineSpam"&gt;%core.app_dir%/data/i18n&lt;/ae:parameter&gt;
+                        &lt;ae:parameter name="ErrorActions"&gt;%core.app_dir%/data/i18n&lt;/ae:parameter&gt;
+                    &lt;/ae:parameter&gt;
+                &lt;/message_translator&gt;
+
+                &lt;date_formatter&gt;
+                    &lt;ae:parameter name="type"&gt;date&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="format"&gt;full&lt;/ae:parameter&gt;
+                &lt;/date_formatter&gt;
+                
+            &lt;/translator&gt;
+
+            &lt;translator domain="long_date"&gt;
+              &lt;date_formatter&gt;
+                &lt;parameters&gt;
+                  &lt;ae:parameter name="type"&gt;datetime&lt;/ae:parameter&gt;
+                  &lt;ae:parameter name="format"&gt;EEEE, dd.MM.yyyy - HH:mm&lt;/ae:parameter&gt;
+                &lt;/ae:parameters&gt;
+              &lt;/date_formatter&gt;
+            &lt;/translator&gt;
+            
+            &lt;translator domain="medium"&gt;
+              &lt;date_formatter&gt;
+                &lt;ae:parameters&gt;
+                  &lt;ae:parameter name="type"&gt;datetime&lt;/ae:parameter&gt;
+                  &lt;ae:parameter name="format"&gt;dd.MM.yyyy&lt;/ae:parameter&gt;
+                &lt;/ae:parameters&gt;
+              &lt;/date_formatter&gt;
+            &lt;/translator&gt;
+        &lt;/translators&gt;
+        
+    &lt;/ae:configuration&gt;
+    
+    &lt;ae:configuration environment="development.*"&gt;
+        &lt;translators default_domain="default"&gt;
+            &lt;translator domain="default"&gt;
+                &lt;message_translator class="AgaviGettextTranslator"&gt;
+                    &lt;ae:parameter name="store_calls"&gt;%core.cache_dir%/data&lt;/ae:parameter&gt;
+                    &lt;!-- other params are inherited from generic config --&gt;
+                &lt;/message_translator&gt;
+            &lt;/translator&gt;
+        &lt;/translators&gt;
+    &lt;/ae:configuration&gt;
+    
+&lt;/ae:configurations&gt;
+
+</pre>
+    As you can see, you can use the <code>AgaviSimpleTranslator</code> or the <code>AgaviGettextTranslator</code>
+    (or roll out your own database-backed translator). For simple applications gettext or the simple mode
+    will probably suffice long enough. If you want to translate validation error messages you have to
+    specify the <code>translation_domain</code> parameter like in the <a href="#validation_12"
+    title="Go to AgaviDateTimeValidator example...">datetime validator example</a>.
+    <br><br>
+    Use the translation manager and the defined translations in your code like this:
+
+<pre class="sh_php">
+// display date value in dd.MM.yyyy format (see translators defined above)
+echo $tm-&gt;_d($field['value'], 'medium');
+
+// display value of ...parameter name="Wrong Password"... element according to current locale in specified domain
+echo $tm-&gt;_('Wrong Password', 'default.errors.Login');
+
+// display value in a different currency (using british pounds for this call instead of default for current locale)
+echo $tm-&gt;_c(1200, null, '@currency=GBP');
+
+// display time based on specific timezone instead of current locale
+echo $tm-&gt;_d(time(), null, '@timezone=Europe/London');
+</pre>
+    <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="translation_1">How do I use and customize a currency format?</dt>
+  <dd>It's a difference if you want to change the currency symbol in use or the number format pattern used. Just for the record: Agavi
+  uses the <acronym title="Common Locale Data Repository">CLDR</acronym> of the Unicode Consortium. See the <a href="http://cldr.unicode.org/"
+  title="Information about the Unicode Common Locale Data Repository...">CLDR website</a> for more information.
+  If you want Agavi to not use the predefined CLDR formatting patterns, you can use your own formats by modifying the
+  <code>translations.xml</code> file:
+<pre class="sh_xml">
+&lt;currency_formatter&gt;
+    &lt;ae:parameter name="format"&gt;
+        &lt;ae:parameter name="en"&gt;¤#,##0.00&lt;/ae:parameter&gt;
+        &lt;ae:parameter name="de"&gt;#.##0,00 ¤&lt;/ae:parameter&gt;
+    &lt;/ae:parameter&gt;
+&lt;/currency_formatter&gt;
+</pre>
+    The currency formatting follows the same rules as the number formatting. The only exception is the special symbol "¤". This symbol
+    is the <a href="http://www.fileformat.info/info/unicode/char/00a4/index.htm" title="Go to description of currency sign unicode symbol...">Unicode Character 'CURRENCY SIGN' (U+00A4)</a> and is used as a placeholder for the currency symbol. To use a different currency than the one currently
+    set on the active locale use:
+<pre class="sh_php">
+$tm-&gt;_c(123.45, 'some.domain', '@currency=GBP');
+</pre>
+    You can globally change the default currency for a locale in your <code>translations.xml</code>.
+    <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+  <dt id="translation_2">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+</dl> <!-- translation -->
+
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+<h2 id="filter-answers">Filter related topics</h2>
+<dl>
+  <dt id="filter_0">What kind of filters are available by default and how to configure them?</dt>
+  <dd>Agavi ships with action and global filters. Filters are run in a chain. The
+    sequences are determinated in <code>app/config/action_filters.xml</code> and <code>app/config/global_filters.xml</code>
+    respectively. The wrapping of filters allows you, to let each filter alter the request and response.
+    The <a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviExecutionTimeFilter.class.php"
+    title="Go to Agavi 1.0.3 class definition if execution time filter..."><code>AgaviExecutionTimeFilter</code></a>
+    can be used as followed in <code>action_filters.xml</code>:
+
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ae:configurations xmlns="http://agavi.org/agavi/config/parts/filters/1.0"
+                   xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"&gt;
+
+    &lt;!-- only for web contexts in development envs --&gt;
+    &lt;ae:configuration environment="development.*" context="web"&gt;
+        &lt;filters&gt;
+
+            &lt;filter name="ExecutionTimeFilter" class="AgaviExecutionTimeFilter"&gt;
+                &lt;!--
+                     insert a comment with the total runtime of that container in the response's
+                     source code (adds the total page runtime and one comment for each slot)
+                --&gt;
+                &lt;ae:parameter name="comment"&gt;true&lt;/ae:parameter&gt;
+                
+                &lt;!-- only run for HTML to let JSON etc. unaltered --&gt;
+                &lt;ae:parameter name="output_types"&gt;
+                    &lt;ae:parameter&gt;html&lt;/ae:parameter&gt;
+                &lt;/ae:parameter&gt;
+            &lt;/filter&gt;
+
+        &lt;/filters&gt;
+    &lt;/ae:configuration&gt;
+
+&lt;/ae:configurations&gt;
+</pre>
+
+    Agavi uses the filter mechanism internally e.g. for action execution (see <a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviExecutionFilter.class.php"
+    title="Go to execution filter definition..."><code>AgaviExecutionFilter</code></a>) or forcing
+    credential constraints for secure actions (see <a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviSecurityFilter.class.php"
+    title="Go to class definition of the security filter"><code>AgaviSecurityFilter</code></a>).
+    If action filters are not enough for you, you may define filters, that are run globally. 
+    A <code>global_filters.xml</code> example file could therefore look like this:
+
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ae:configurations xmlns="http://agavi.org/agavi/config/parts/filters/1.0"
+                   xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"&gt;
+
+    &lt;!-- this section is only for web contexts --&gt;
+    &lt;ae:configuration context="web"&gt;
+        &lt;filters&gt;
+
+            &lt;!-- TidyFilter tries to clean up the HTML code for you --&gt;
+            &lt;filter name="TidyFilter" class="AgaviTidyFilter"&gt;
+
+                &lt;!-- only run on HTML instead of JSON and other output types you may have defined --&gt;
+                &lt;ae:parameter name="output_types"&gt;
+                    &lt;ae:parameter&gt;html&lt;/ae:parameter&gt;
+                &lt;/ae:parameter&gt;
+
+                &lt;!-- don't let errors stop it --&gt;
+                &lt;ae:parameter name="ignore_errors"&gt;true&lt;/ae:parameter&gt;
+
+                &lt;!-- set some options to the filter --&gt;
+                &lt;ae:parameter name="tidy_options"&gt;
+                    &lt;ae:parameter name="output-xhtml"&gt;true&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="numeric-entities"&gt;true&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="clean"&gt;true&lt;/ae:parameter&gt;
+                    &lt;ae:parameter name="indent"&gt;true&lt;/ae:parameter&gt;
+                &lt;/ae:parameter&gt;
+                
+                &lt;!-- default encoding to use on any web apps is utf-8 of course --&gt;
+                &lt;ae:parameter name="tidy_encoding"&gt;utf8&lt;/ae:parameter&gt;
+            &lt;/filter&gt;
+
+            &lt;!--
+                 FormPopulationFilter tries to automagically pre/repopulate form fields and
+                 insert specific and general error messages from validators etc. in your page
+                 at positions (and with markup) you find suitable for your application  
+            --&gt;
+            &lt;filter name="FormPopulationFilter" class="AgaviFormPopulationFilter"&gt;
+
+                &lt;ae:parameters&gt;
+
+                    &lt;!-- only run for request method "write" (=POST on web) by default (can be changed at runtime, of course) --&gt;
+                    &lt;!-- if you omit this, it will never run --&gt;
+                    &lt;ae:parameter name="methods"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter&gt;write&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+
+                    &lt;!-- only run for output type "html" (so it doesn't break on, say, JSON data) --&gt;
+                    &lt;!-- if you omit this, it will run for all output types --&gt;
+                    &lt;ae:parameter name="output_types"&gt;
+                        &lt;ae:parameters&gt;
+                            &lt;ae:parameter&gt;html&lt;/ae:parameter&gt;
+                        &lt;/ae:parameters&gt;
+                    &lt;/ae:parameter&gt;
+
+                    &lt;!-- error message insertion rules --&gt;
+                    &lt;!-- they are run in sequence; once the first one matched, execution stops --&gt;
+                    &lt;!--
+                        errors that belong to more than one field (e.g. date validator) can be handled using "multi_field_error_messages"
+                        "normal" errors are handled through "field_error_messages"
+                        errors that yield no match and those that have no corresponding field are inserted using rules defined in "error_messages".
+                    --&gt;
+
+                    &lt;!--
+                        for all field error messages.
+                    --&gt;
+                    &lt;ae:parameter name="field_error_messages"&gt;
+                        &lt;!--
+                            ${htmlnsPrefix} is either empty (for HTML) or something like "html:" for XHTML documents with xmlns="..." notation.
+                            Always use this, makes your code more bullet proof. XPath needs the namespaces when the document is namespaced
+                        --&gt;
+
+                        &lt;!-- all input fields that are not checkboxes or radios, and all textareas --&gt;
+                        &lt;ae:parameter name="self::${htmlnsPrefix}input[not(@type='checkbox' or @type='radio')] | self::${htmlnsPrefix}textarea"&gt;
+                            &lt;!-- if this rule matched, then the node found by the rule is our starting point for inserting the error message(s). --&gt;
+
+                            &lt;!-- can be any of "before", "after" or "child" (to insert as prev, next sibling or last child) --&gt;
+                            &lt;ae:parameter name="location"&gt;after&lt;/ae:parameter&gt;
+                            &lt;!-- a container groups all errors for one element. ${errorMessages} is a string containing all errors (see below) --&gt;
+                            &lt;ae:parameter name="container"&gt;&lt;![CDATA[&lt;div class="errors"&gt;${errorMessages}&lt;/div&gt;]]&gt;&lt;/ae:parameter&gt;
+                            &lt;!--
+                                this defines the HTML for each individual error message; those are then put into the container.
+                                ${errorMessage} is the error message string
+                            --&gt;
+                            &lt;ae:parameter name="markup"&gt;&lt;![CDATA[&lt;p class="error"&gt;${errorMessage}&lt;/p&gt;]]&gt;&lt;/ae:parameter&gt;
+                        &lt;/ae:parameter&gt;
+
+                        &lt;!-- all other inputs - note how we select the parent element and insert ourselves as last child of it --&gt;
+                        &lt;ae:parameter name="parent::*"&gt;
+                            &lt;ae:parameter name="location"&gt;child&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="container"&gt;&lt;![CDATA[&lt;div class="errors"&gt;${errorMessages}&lt;/div&gt;]]&gt;&lt;/ae:parameter&gt;
+                            &lt;ae:parameter name="markup"&gt;&lt;![CDATA[&lt;p class="error"&gt;${errorMessage}&lt;/p&gt;]]&gt;&lt;/ae:parameter&gt;
+                        &lt;/ae:parameter&gt;
+                    &lt;/ae:parameter&gt;
+
+                    &lt;!--
+                    &lt;parameter name="multi_field_error_messages"&gt;
+                    &lt;/parameter&gt;
+                    --&gt;
+
+                    &lt;!-- everything that did not match any of the rules above, or errors that do not belong to a field --&gt;
+                    &lt;ae:parameter name="error_messages"&gt;
+                        &lt;!-- insert before the element --&gt;
+                        &lt;!-- that can be an input, or a form, if the error does not belong to a field or didn't match anywhere else --&gt;
+                        &lt;ae:parameter name="self::*"&gt;
+                            &lt;ae:parameter name="location"&gt;before&lt;/ae:parameter&gt;
+                            &lt;!-- no container here! we just insert paragraph elements --&gt;
+                            &lt;ae:parameter name="markup"&gt;&lt;![CDATA[&lt;p class="error"&gt;${errorMessage}&lt;/p&gt;]]&gt;&lt;/ae:parameter&gt;
+                        &lt;/ae:parameter&gt;
+                    &lt;/ae:parameter&gt;
+
+                &lt;/ae:parameters&gt;
+            &lt;/filter&gt;
+
+        &lt;/filters&gt;
+    &lt;/ae:configuration&gt;
+
+    &lt;-- disable the tidy filter for all development* environments to force devs to think about valid code ;) --&gt;
+    &lt;ae:configuration environment="development.*"&gt;
+        &lt;filters&gt;
+            &lt;filter name="TidyFilter" enabled="false" /&gt;
+        &lt;/filters&gt;
+    &lt;/ae:configuration&gt;
+
+    &lt;-- try to relax things a bit for all production related environments --&gt;
+    &lt;ae:configuration environment="production.*"&gt;
+        &lt;filters&gt;
+            &lt;filter name="FormPopulationFilter"&gt;
+                &lt;ae:parameter name="ignore_parse_errors"&gt;true&lt;/ae:parameter&gt;
+            &lt;/filter&gt;
+        &lt;/filters&gt;
+    &lt;/ae:configuration&gt;
+
+&lt;/ae:configurations&gt;
+</pre>
+    It first uses the <a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviTidyFilter.class.php"
+    title="Go to definition of Agavi's tidy filter"><code>AgaviTidyFilter</code></a> to cleanup code
+    that may contain some markup glitches (think <abbr title="Content Management System">CMS</abbr> or
+    user-generated content). After that the <a href="http://trac.agavi.org/browser/tags/1.0.3/src/filter/AgaviFormPopulationFilter.class.php"
+    title="Go to definition of Agavi's FormPopulationFilter..."><code>AgaviFormPopulationFilter</code></a> runs,
+    repopulates values to your various form fields (inputs, textareas and the like) and inserts
+    several types of error messages into your document. You may use XPath expressions as you like
+    to insert input field specific or common messages with whatever container markup you prefer.
+    For development environments the tidy filter is disabled and for production environments the
+    form population filter is set to ignore parse errors. 
+   <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+
+
+  <dt id="filter_2">What's the execution order of filters?</dt>
+  <dd>When you define multiple filters in <code>global_filters.xml</code> or
+    <code>action_filters.xml</code> files, the markup order is essential in
+    certain situations. The execution order of filters should be:
+<pre>
+TOP  --&gt;  BOTTOM  --&gt;  DISPATCHFILTER  --&gt;  BOTTOM  --&gt;  TOP
+</pre>
+    This means, that dependant on the things your filters are doing in the chain
+    BEFORE or AFTER the request dispatching you may have to move them up or
+    down in the XML file to get your ideal execution order.
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+
+
+
+
+</dl> <!-- filter -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+<h2 id="testing-answers">Testing related topics</h2>
+<dl>
+  <dt id="testing_0">How do I start?</dt>
+  <dd>Try using the sample application's <code>sample/test</code> directory as a
+    start and after copying stuff to your own project try editing <code>/test/config/suites.xml</code>
+    to have your own test suites and tests. Modify <code>run-tests.php</code> and
+    add some required files to the autoloader for libraries you need.
+<pre class="sh_xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ae:configurations xmlns:ae="http://agavi.org/agavi/config/global/envelope/1.0"
+                      xmlns="http://agavi.org/agavi/config/parts/testing/suites/1.0"&gt;
+  &lt;ae:configuration&gt;
+    &lt;suites&gt;
+      &lt;suite name="Default"&gt;
+        &lt;testfiles&gt;
+          &lt;testfile&gt;OneNiceUnitTest.php&lt;/testfile&gt;
+          &lt;testfile&gt;AndSomeNiceFlowTest.php&lt;/testfile&gt;
+        &lt;/testfiles&gt;
+      &lt;/suite&gt;
+      &lt;suite name="Login"&gt;
+        &lt;testfiles&gt;
+          &lt;testfile&gt;AnotherNiceUnitTest.php&lt;/testfile&gt;
+          &lt;testfile&gt;AndAnotherNiceFlowTest.php&lt;/testfile&gt;
+        &lt;/testfiles&gt;
+      &lt;/suite&gt;
+    &lt;/suites&gt;
+  &lt;/ae:configuration&gt;
+&lt;/ae:configurations&gt;
+</pre>
+    After creating test cases and suites you may run them like this (or whatever, just
+    have a look at the available commandline parameters):
+<pre class="sh_php">
+php -c php.ini run-tests.php "TextUI/Command.php" --verbose
+</pre>
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="testing_1">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="testing_2">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="testing_3">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="testing_4">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="testing_5">question</dt>
+  <dd>some nice description and example...
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+</dl> <!-- testing -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+
+
+
+
+
+<h2 id="misc-anwers">Misc topics</h2>
+<dl>
+  <dt id="misc_0">How do I improve code completion in Netbeans or Eclipse or <code>$favoriteIDE</code>?</dt>
+  <dd><a href="http://www.netbeans.org/features/php/" title="Netbeans PHP IDE features page...">Netbeans (6.5+)</a>
+    or Eclipse (PDT) offer a good code completion by default already. To further improve things and
+    save on some keystrokes you may use type hinting or an autocomplete file to help those IDEs.
+<pre class="sh_php">
+// save the following as autocomplete.php somewhere in your project structure (or use it via project includes),
+// it should give you code completion in Agavi templates for assigns (defined in app/config/output_types.xml):
+&lt;?php
+exit();
+$slots = array();
+$template = array(); // agavi 0.11 default
+$t = array(); // agavi 1.0 default
+$tm = new AgaviTranslationManager();
+$ro = new AgaviWebRouting();
+$rq = new AgaviWebRequest();
+$ct = new AgaviController();
+$us = new AgaviSecurityUser();
+$rd = new AgaviWebRequestDataHolder();
+?&gt;
+</pre>
+    In models, views and actions you better use some nice PHP documentation to give your IDE as much
+    information about parameters and return values as you can. Further on you may use <strong>type hinting</strong> like this:
+<pre class="sh_php">
+/* @var $author AuthorModel */
+$author = $this-&gt;getContext()-&gt;getModel('Author');
+</pre>
+    If that's still not good enough for you, you can try to further enhance your project's base view like this:
+<pre class="sh_php">
+class ProjectBaseView extends AgaviView
+{
+    /**
+     * @var AgaviWebRequest
+     */
+    protected $rq = null;
+
+    /**
+     * @var AgaviWebRouting
+     */
+    protected $ro = null;
+
+    /**
+     * @var AgaviController
+     */
+    protected $ct = null;
+
+    /**
+     * @var AgaviWebResponse
+     */
+    protected $rs = null;
+
+    /**
+     * @var AgaviSecurityUser
+     */
+    protected $us = null;
+
+    /**
+     * @var AgaviTranslationManager
+     */
+    protected $tm = null;
+    
+    /**
+     * @var AgaviValidationManager
+     */
+    protected $vm = null;
+    
+    /**
+     * @var AgaviDatabaseManager
+     */
+    protected $dbm = null;
+    
+    /**
+     * @var AgaviContext
+     */
+    protected $ctx = null;
+    
+    /**
+     * @var bool
+     */
+    protected $isSlot = false;
+
+    /**
+     * @see AgaviView::initialize()
+     */
+    public function initialize(AgaviExecutionContainer $container)
+    {
+        parent::initialize($container);
+
+        $this-&gt;ctx = $this-&gt;getContext(); 
+        $this-&gt;dbm = $this-&gt;ctx-&gt;getDatabaseManager();
+        $this-&gt;rq  = $this-&gt;ctx-&gt;getRequest();
+        $this-&gt;ro  = $this-&gt;ctx-&gt;getRouting();
+        $this-&gt;ct  = $this-&gt;ctx-&gt;getController();
+        $this-&gt;us  = $this-&gt;ctx-&gt;getUser();
+        $this-&gt;tm  = $this-&gt;ctx-&gt;getTranslationManager();
+        $this-&gt;vm  = $this-&gt;ctx-&gt;getValidationManager();
+        $this-&gt;rs  = $this-&gt;getResponse();
+
+        $this-&gt;isSlot = $container-&gt;hasParameter('is_slot');
+
+        return true;
+    }
+}
+</pre>
+    Not that you NEED this (or should use it), but some people may like these shortcuts. Have fun. :)
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+
+  <dt id="misc_1">How do I set an exit code in console context or shell applications?</dt>
+  <dd>Just like response attributes and headers you are able to set the exit code in your views:
+  <pre class="sh_php">
+$this-&gt;getResponse()-&gt;setExitCode(1);
+</pre>
+    With this your Agavi PHP shell/console applications can now return correct status codes to your shell depending on success/error. :-)
+  <a href="#faq" title="Back to top">&uarr;</a></dd>
+  
+
+</dl> <!-- misc -->
+
+<p class="totop"><a href="#faq">Back to the top of this page</a></p>
+
+<hr>
+
+
+
+
+</div>
+
+<script type="text/javascript" src="shjs-0.6/sh_main.min.js"></script>
+
+</body>
+</html>

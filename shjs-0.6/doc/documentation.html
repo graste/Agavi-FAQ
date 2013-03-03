@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<title>SHJS - Documentation</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="../css/sh_nedit.min.css">
+<script type="text/javascript" src="../sh_main.min.js"></script>
+<script type="text/javascript" src="../lang/sh_html.min.js"></script>
+<script type="text/javascript" src="../lang/sh_sh.min.js"></script>
+</head>
+
+<body onload="sh_highlightDocument();">
+
+<div id="heading"><h1 id="documentation">SHJS - Documentation</h1></div>
+
+<div id="main">
+
+<p class="first">
+To highlight source code in an HTML document using SHJS, perform the
+following steps:
+</p>
+
+<ul>
+<li>
+Place each source code snippet in a <code>pre</code> element. (Currently SHJS
+cannot highlight code which is not in a <code>pre</code> element.)  The
+<code>pre</code> element must be in the class
+<code>sh_<var>LANGUAGE</var></code>, where <var>LANGUAGE</var> specifies the
+programming language in which the source code is written.  For example, for C++
+the correct class is <code>sh_cpp</code>.
+
+<pre class="sh_html">
+&lt;pre class="sh_cpp"&gt;
+#include &amp;lt;iostream&amp;gt;
+
+using namespace std;
+
+int main(int argc, char ** argv) {
+  cout &amp;lt;&amp;lt; "Hello world" &amp;lt;&amp;lt; endl;
+  return 0;
+}
+&lt;/pre&gt;
+</pre>
+
+The following table shows the correct class to use for each language:
+
+<table id="classes">
+<tr>
+<th>Language</th>
+<th>HTML class</th>
+</tr>
+<tr>
+<td>Bison</td>
+<td><code>sh_bison</code></td>
+</tr>
+<tr>
+<td>C</td>
+<td><code>sh_c</code></td>
+</tr>
+<tr>
+<td>C++</td>
+<td><code>sh_cpp</code></td>
+</tr>
+<tr>
+<td>C#</td>
+<td><code>sh_csharp</code></td>
+</tr>
+<tr>
+<td>ChangeLog</td>
+<td><code>sh_changelog</code></td>
+</tr>
+<tr>
+<td>CSS</td>
+<td><code>sh_css</code></td>
+</tr>
+<tr>
+<td>Desktop files</td>
+<td><code>sh_desktop</code></td>
+</tr>
+<tr>
+<td>Diff</td>
+<td><code>sh_diff</code></td>
+</tr>
+<tr>
+<td>Flex</td>
+<td><code>sh_flex</code></td>
+</tr>
+<tr>
+<td>GLSL</td>
+<td><code>sh_glsl</code></td>
+</tr>
+<tr>
+<td>Haxe</td>
+<td><code>sh_haxe</code></td>
+</tr>
+<tr>
+<td>HTML</td>
+<td><code>sh_html</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>sh_java</code></td>
+</tr>
+<tr>
+<td>Java properties files</td>
+<td><code>sh_properties</code></td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td><code>sh_javascript</code></td>
+</tr>
+<tr>
+<td>JavaScript with DOM</td>
+<td><code>sh_javascript_dom</code></td>
+</tr>
+<tr>
+<td>LaTeX</td>
+<td><code>sh_latex</code></td>
+</tr>
+<tr>
+<td>LDAP files</td>
+<td><code>sh_ldap</code></td>
+</tr>
+<tr>
+<td>Log files</td>
+<td><code>sh_log</code></td>
+</tr>
+<tr>
+<td>LSM (Linux Software Map) files</td>
+<td><code>sh_lsm</code></td>
+</tr>
+<tr>
+<td>M4</td>
+<td><code>sh_m4</code></td>
+</tr>
+<tr>
+<td>Makefile</td>
+<td><code>sh_makefile</code></td>
+</tr>
+<tr>
+<td>Objective Caml</td>
+<td><code>sh_caml</code></td>
+</tr>
+<tr>
+<td>Oracle SQL</td>
+<td><code>sh_oracle</code></td>
+</tr>
+<tr>
+<td>Pascal</td>
+<td><code>sh_pascal</code></td>
+</tr>
+<tr>
+<td>Perl</td>
+<td><code>sh_perl</code></td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><code>sh_php</code></td>
+</tr>
+<tr>
+<td>Prolog</td>
+<td><code>sh_prolog</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>sh_python</code></td>
+</tr>
+<tr>
+<td>RPM spec files</td>
+<td><code>sh_spec</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>sh_ruby</code></td>
+</tr>
+<tr>
+<td>S-Lang</td>
+<td><code>sh_slang</code></td>
+</tr>
+<tr>
+<td>Scala</td>
+<td><code>sh_scala</code></td>
+</tr>
+<tr>
+<td>Shell</td>
+<td><code>sh_sh</code></td>
+</tr>
+<tr>
+<td>SQL</td>
+<td><code>sh_sql</code></td>
+</tr>
+<tr>
+<td>Standard ML</td>
+<td><code>sh_sml</code></td>
+</tr>
+<tr>
+<td>Tcl</td>
+<td><code>sh_tcl</code></td>
+</tr>
+<tr>
+<td>XML</td>
+<td><code>sh_xml</code></td>
+</tr>
+<tr>
+<td>Xorg configuration files</td>
+<td><code>sh_xorg</code></td>
+</tr>
+</table>
+
+<li>
+In the <code>head</code> element of your document, include the
+<code>sh_main.js</code> script and the script for the programming language you
+are using.  (If you have multiple languages in the same document, you can
+include multiple scripts.)  For example, for C++ the correct script is 
+<code>lang/sh_cpp.js</code>, assuming that language-specific scripts are stored
+in the <code>lang/</code> directory.
+
+<pre class="sh_html">
+&lt;head&gt;
+...
+&lt;script type="text/javascript" src="sh_main.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="lang/sh_cpp.js"&gt;&lt;/script&gt;
+...
+&lt;/head&gt;
+</pre>
+</li>
+
+<li>
+Also in the <code>head</code> element, include a link to one of the style sheets.
+You can use the default style sheet (<code>sh_style.css</code>) or one of the
+style sheets in the <code>css/</code> directory.
+
+<pre class="sh_html">
+&lt;head&gt;
+...
+&lt;link type="text/css" rel="stylesheet" href="css/sh_nedit.css"&gt;
+...
+&lt;/head&gt;
+</pre>
+</li>
+
+<li>
+Call the function <code>sh_highlightDocument</code> in the <code>onload</code>
+handler of the document's <code>body</code> element:
+
+<pre class="sh_html">
+&lt;body onload="sh_highlightDocument();"&gt;
+</pre>
+</ul>
+
+<p>
+Note: All SHJS CSS classes, JavaScript functions and file names begin
+with the prefix <code>sh_</code> to avoid conflicts with other names in your
+HTML document.
+</p>
+
+<h2>Automatic loading of language scripts (new in version 0.5)</h2>
+
+<p>
+As of version 0.5, you can instruct SHJS to load language-specific scripts
+automatically, so that they do not require <code>&lt;script&gt;</code> tags. To
+do this, call <code>sh_highlightDocument</code> with two arguments,
+<var>PREFIX</var> and <var>SUFFIX</var>. For every <code>&lt;pre&gt;</code> tag
+with class <var>CLASS</var>, SHJS will automatically load a language-specific
+script from the URL formed by concatenating <var>PREFIX</var>, <var>CLASS</var>,
+and <var>SUFFIX</var>.
+</p>
+
+<p>
+For example, for the following HTML document, SHJS will automatically load the
+language file located at the URL <code>lang/sh_java.js</code>.
+</p>
+
+<pre class="sh_html">
+&lt;html&gt;
+&lt;head&gt;
+&lt;script type="text/javascript" src="sh_main.js"&gt;&lt;/script&gt;
+&lt;link type="text/css" rel="stylesheet" href="css/sh_nedit.css"&gt;
+&lt;/head&gt;
+
+&lt;!--
+PREFIX = 'lang/'
+SUFFIX = '.js'
+--&gt;
+&lt;body onload="sh_highlightDocument('lang/', '.js');"&gt;
+
+&lt;!--
+CLASS = 'sh_java'
+PREFIX + CLASS + SUFFIX = 'lang/' + 'sh_java' + '.js'
+                        = 'lang/sh_java.js'
+--&gt;
+&lt;pre class="sh_java"&gt;
+public class X {}
+&lt;/pre&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+In the next document, SHJS will load the language file
+<code>sh_cpp.min.js</code> from the current directory:
+</p>
+
+<pre class="sh_html">
+&lt;html&gt;
+&lt;head&gt;
+&lt;script type="text/javascript" src="sh_main.min.js"&gt;&lt;/script&gt;
+&lt;link type="text/css" rel="stylesheet" href="css/sh_nedit.min.css"&gt;
+&lt;/head&gt;
+
+&lt;!--
+PREFIX = ''
+SUFFIX = '.min.js'
+--&gt;
+&lt;body onload="sh_highlightDocument('', '.min.js');"&gt;
+
+&lt;!--
+CLASS = 'sh_cpp'
+PREFIX + CLASS + SUFFIX = '' + 'sh_cpp' + '.min.js'
+                        = 'sh_cpp.min.js'
+--&gt;
+&lt;pre class="sh_cpp"&gt;
+class X {};
+&lt;/pre&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+Note that the language-specific scripts must be located on the same host
+as the HTML document from which they are loaded.
+</p>
+
+<h2>Adding support for new languages</h2>
+
+<p>
+SHJS comes with definitions for highlighting
+<a href="#classes">more than 30 different languages</a>.
+If your favorite language is not among them, you can create a new
+language definition.
+</p>
+
+<p>
+SHJS uses the same file format for defining languages as
+<a href="http://www.gnu.org/software/src-highlite/">GNU Source-Highlight</a>.
+This format is defined in the
+<a href="http://www.gnu.org/software/src-highlite/source-highlight.html#Language-Definitions">source-highlight manual</a>.
+Briefly, each language construct (keywords, variables, strings, etc.) is 
+specified by a string pattern (usually a regular expression) and
+given a name.  When highlighting the language, SHJS will place every instance
+of a language construct in an HTML <code>span</code> element; its <code>class</code>
+attribute will be the name of the construct with a <code>sh_</code> prefix
+(e.g., <code>sh_keyword</code>).  These <code>span</code> elements are then
+highlighted by the document's style sheet.  (Note that a construct with the
+name <code>url</code> is somewhat magical: SHJS will turn it into
+an HTML hyperlink.)
+</p>
+
+<p>
+Almost any language definition that works for source-highlight will also work
+for SHJS.  However,source-highlight uses
+<a href="http://www.boost.org/libs/regex/doc/syntax.html">Boost regular expressions</a>,
+while SHJS relies on JavaScript regular expressions.  SHJS is capable of
+converting some simple Boost regular expressions to JavaScript (for example,
+SHJS converts Boost word boundaries to JavaScript word boundaries), but in
+general you should avoid using regular expression constructs not supported in
+JavaScript.  For example, avoid the use of Boost's lookbehind operator, as there
+is no equivalent in JavaScript.
+</p>
+
+<p>
+Once you have defined the language, you must convert it to the JavaScript format
+used by SHJS.  You will require the <code>sh2js.pl</code> script from a <a
+href="download.html">source distribution</a> of SHJS.  The <code>sh2js.pl</code>
+script is written in Perl and requires the <code>Parse::RecDescent</code>
+module.
+</p>
+
+<p>
+Suppose your new language definition is contained in the file
+<code>foo.lang</code>.  Then the following command will generate the
+JavaScript file needed by SHJS:
+</p>
+
+<pre class="sh_sh">
+perl sh2js.pl foo.lang > sh_foo.js
+</pre>
+
+<p>
+You can then reference the <code>sh_foo.js</code> file in your HTML document.
+You should place source code snippets in a <code>pre</code> element with
+<code>class="sh_foo"</code>.
+</p>
+
+<h2>Creating new themes</h2>
+
+<p>
+The easiest way to create a new highlighting theme is to customize the <code><a
+href="../sh_style.css">sh_style.css</a></code> file in the top-level directory
+of the SHJS distribution.
+</p>
+
+<address>
+Copyright &copy; 2007, 2008 <a href="mailto:gnombat@users.sourceforge.net">gnombat@users.sourceforge.net</a>
+<a href="http://www.gnu.org/licenses/gpl.html"><img src="gplv3-88x31.png" width="88" height="31" alt="GPL Logo"></a>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=186094&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" /></a>
+</address>
+
+</div>
+
+<div id="navigation">
+<a href="../">Home</a> |
+<a href="news.html">News</a> |
+Documentation |
+<a href="browsers.html">Browsers</a> |
+<a href="download.html">Download</a> |
+<a href="http://sourceforge.net/tracker/?group_id=186094">Bugs</a> |
+<a href="gplv3.html">License</a> |
+<a href="links.html">Links</a>
+</div>
+
+</body>
+</html>
