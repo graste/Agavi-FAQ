@@ -1454,9 +1454,22 @@ public function executeRss(AgaviRequestDataHolder $rd)
 &lt;validator ... severity="critical"&gt;
 </pre>
     The base class <code>AgaviValidator</code> defines multiple error severity constants
-    in case of failure. They are <code>INFO</code>, <code>SILENT</code>, <code>NOTICE</code>,
+    in case of failure. They are <code>SUCCESS</code>, <code>INFO</code>, <code>SILENT</code>, <code>NOTICE</code>,
     <code>ERROR</code> and <code>CRITICAL</code>. For further details just have a look
-    at the source code and its comments.
+    at the <code>AgaviValidator</code> source code. The severity levels work like this:
+    <ul>
+        <li><code>CRITICAL</code> aborts validation instantly and other validators will not be executed.</li>
+        <li><code>ERROR</code> is the default that marks the argument as not valid. The argument
+            will be in the validation report and thus may be populated via the FormPopulationFilter (FPF).
+            The value will of course not be available for your actions etc.<li>
+        <li><code>SUCCESS</code> is used when the validator succeeded.</li>
+        <li><code>INFO</code> means that the failing of the validator does not have an impact on the result of
+            the whole validation process. The 'failed' value will still be available for actions.</li>
+        <li><code>SILENT</code> means, that there will be no error in the validation report
+            (and thus no automatic repopulation in html forms via the FormPopulationFilter can happen).</li>
+        <li><code>NOTICE</code> is similar to <code>SILENT</code>, but will generate an error for the validation
+            report. The validation process in general does not fail, but the value will not be available.</li>
+    </ul>
   <a href="#faq" title="Back to top">&uarr;</a></dd>
 
   <dt id="validation_4">Can validators depend on other validators?</dt>
