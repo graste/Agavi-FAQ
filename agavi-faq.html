@@ -728,16 +728,23 @@ $this-&gt;getContext()-&gt;getLayer('decorator')-&gt;setTemplate(AgaviConfig::ge
   <dt id="general_20">What is the Agavi startup sequence?</dt>
   <dd>Agavi starts something like that:
   <ol>
-    <li>TranslationManager</li>
-    <li>User</li>
+    <li>DatabaseManager (init + startup)</li>
+    <li>LoggerManager (init + startup)</li>
+    <li>TranslationManager (init)</li>
     <li>Request (init)</li>
     <li>Routing (init)</li>
-    <li>Request (startup)</li>
+    <li>Controller (init)</li>
+    <li>Storage (init + startup)</li>
+    <li>User (init)</li>
+    <li>TranslationManager (startup)</li>
+    <li>User (startup)</li>
     <li>Routing (startup)</li>
-    <li>Controller</li>
+    <li>Request (startup)</li>
+    <li>Controller (startup)</li>
   </ol>
     For used classes and startup sequence e. g. see the <code>AgaviFactoryConfigHandler</code> source file. The shutdown
-    sequence is in reverse. So controller is shut down first, then request, routing, user, translation manager and storage.<br>
+    sequence is somewhat in reverse. Controller is shutdown first, then request, routing, user, translation manager,
+    storage, logger manager and finally the database manager.<br>
     The startup sequence is important, as this means, that you are able to e.g. access the user in routing and
     validation if you need it. Usually <code>$_GET etc.</code> are unset in <code>AgaviRequest::startup()</code> and/or
     <code>AgaviWebRequest::startup()</code>, but with the above startup sequence you are able to register
